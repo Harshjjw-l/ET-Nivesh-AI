@@ -393,6 +393,52 @@ def _fetch_nse_bulk_deals_for_portfolio(portfolio_tickers: List[str]) -> Any:
     return matches
 
 
+def _fetch_nse_bulk_deals(limit: int = 3) -> List[Dict[str, Any]]:
+    """
+    Fetch latest bulk deals from NSE and return up to `limit` rows.
+    """
+    homepage = "https://www.nseindia.com"
+    urls_to_try = [
+        "https://www.nseindia.com/api/snapshot-capital-market-largedeal?mode=bulk_deals",
+        "https://www.nseindia.com/api/bulkdeals",
+        "https://www.nseindia.com/api/bulk-deals",
+        "https://www.nseindia.com/api/bulkdeals/",
+        "https://www.nseindia.com/api/bulk-deals/",
+    ]
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+        "Referer": "https://www.nseindia.com",
+    }
+
+    raw: Optional[str] = None
+    with requests.Session() as s:
+        s.get(homepage, headers=headers, timeout=10)
+        for url in urls_to_try:
+            resp = s.get(url, headers=headers, timeout=10)
+            if resp.status_code == 404:
+                continue
+            resp.raise_for_status()
+            raw = resp.text
+            break
+
+    if raw is None:
+        return []
+
+    payload = json.loads(raw)
+    rows: Any = None
+    if isinstance(payload, dict):
+        if isinstance(payload.get("data"), list):
+            rows = payload.get("data")
+        elif isinstance(payload.get("bulk_deals"), list):
+            rows = payload.get("bulk_deals")
+    if not isinstance(rows, list):
+        return []
+
+    clean_rows = [r for r in rows if isinstance(r, dict)]
+    return clean_rows[: max(0, limit)]
+
+
 def _groq_client() -> Any:
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
@@ -499,6 +545,15 @@ def test_all_tickers() -> Dict[str, Any]:
             )
 
     return {"working": working, "failed": failed}
+
+
+@app.get("/signals/today")
+def today_signals() -> Dict[str, Any]:
+    try:
+        deals = _fetch_nse_bulk_deals(limit=3)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to fetch bulk deals: {e}")
+    return {"timestamp": _ist_timestamp_str(), "deals": deals}
 
 
 @app.post("/chat", response_model=ChatResponse)

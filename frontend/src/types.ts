@@ -21,5 +21,23 @@ export type ChatMessage = {
   role: 'user' | 'assistant'
   content: string
   sources?: SourceItem[]
+  indicators?: {
+    rsi?: number | string | null
+    macdSignal?: string | null
+  }
+}
+
+export type BulkDeal = {
+  symbol?: string
+  securityName?: string
+  secName?: string
+  clientName?: string
+  quantityTraded?: number | string
+  tradedQty?: number | string
+  buySell?: string
+  action?: string
+  price?: number | string
+  dealDate?: string
+  [key: string]: unknown
 }
 

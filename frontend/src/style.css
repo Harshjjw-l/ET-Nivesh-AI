@@ -210,6 +210,49 @@ body {
   overflow: auto;
 }
 
+.todaySignalsWrap {
+  padding: 14px 18px 0;
+}
+
+.todaySignalsTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.86);
+  margin-bottom: 10px;
+}
+
+.todaySignalsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.signalDealCard {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 10px 12px;
+}
+
+.signalDealStock {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 6px;
+}
+
+.signalDealSummary {
+  font-size: 12px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.todaySignalsError,
+.todaySignalsEmpty {
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .msgRow {
   display: flex;
   flex-direction: column;
@@ -286,6 +329,47 @@ body {
   color: rgba(255, 255, 255, 0.86);
   line-height: 1.35;
   word-break: break-word;
+}
+
+.signalCard {
+  width: min(760px, 95%);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.14);
+  padding: 10px 12px;
+}
+
+.signalCard.bullish {
+  border-color: rgba(16, 185, 129, 0.5);
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.signalCard.bearish {
+  border-color: rgba(239, 68, 68, 0.5);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.signalTitle {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.signalRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  padding: 2px 0;
+}
+
+.signalLabel {
+  color: var(--muted);
+}
+
+.signalValue {
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .composer {
