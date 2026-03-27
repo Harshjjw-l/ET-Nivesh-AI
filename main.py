@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 import pandas_ta as ta
+import requests
 import yfinance as yf
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
@@ -47,6 +48,7 @@ class ChatResponse(BaseModel):
     sources_used: List[str]
     timestamp: str
     concentration_warning: Optional[str] = None
+    bulk_deals: Any = None
 
 
 _IST_TZ = timezone(timedelta(hours=5, minutes=30))
@@ -312,6 +314,85 @@ def _concentration_warning(tickers: List[str], investment_amount: float) -> Opti
     )
 
 
+def _fetch_nse_bulk_deals_for_portfolio(portfolio_tickers: List[str]) -> Any:
+    """
+    Fetch today's bulk deals from NSE and filter for portfolio tickers.
+    Returns a list of matching deals, or a string message if none found.
+    """
+    bases = {(t or "").upper().replace(".NS", "") for t in (portfolio_tickers or []) if (t or "").strip()}
+    if not bases:
+        return "No bulk deal activity today for your stocks"
+
+    # NSE requires a session cookie established from homepage.
+    homepage = "https://www.nseindia.com"
+    # NSE changed bulk deals endpoints; "largedeal snapshot" supports bulk deals via mode parameter.
+    urls_to_try = [
+        "https://www.nseindia.com/api/snapshot-capital-market-largedeal?mode=bulk_deals",
+        # Fallbacks (may be retired / blocked depending on region/network)
+        "https://www.nseindia.com/api/bulkdeals",
+        "https://www.nseindia.com/api/bulk-deals",
+        "https://www.nseindia.com/api/bulkdeals/",
+        "https://www.nseindia.com/api/bulk-deals/",
+    ]
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json",
+        "Referer": "https://www.nseindia.com",
+    }
+
+    raw: Optional[str] = None
+    last_err: Optional[str] = None
+    try:
+        with requests.Session() as s:
+            s.get(homepage, headers=headers, timeout=10)
+            for url in urls_to_try:
+                try:
+                    resp = s.get(url, headers=headers, timeout=10)
+                    if resp.status_code == 404:
+                        last_err = f"404 Not Found for url: {url}"
+                        continue
+                    resp.raise_for_status()
+                    raw = resp.text
+                    break
+                except Exception as e:
+                    last_err = str(e)
+                    continue
+    except Exception as e:
+        return f"NSE bulk deals fetch failed: {e}"
+
+    if raw is None:
+        return "NSE bulk deals fetch failed: " + (last_err or f"all endpoints failed. Tried: {', '.join(urls_to_try)}")
+
+    try:
+        payload = json.loads(raw)
+    except Exception:
+        return "NSE bulk deals fetch failed: invalid JSON response"
+
+    # Snapshot endpoint sometimes returns {"data":[...]} or other shapes; support both.
+    rows = None
+    if isinstance(payload, dict):
+        if isinstance(payload.get("data"), list):
+            rows = payload.get("data")
+        elif isinstance(payload.get("bulk_deals"), list):
+            rows = payload.get("bulk_deals")
+    if not isinstance(rows, list) or not rows:
+        return "No bulk deal activity today for your stocks"
+
+    matches: List[Dict[str, Any]] = []
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+        sym = str(r.get("symbol") or "").upper().strip()
+        if sym and sym in bases:
+            # Keep the raw row (it's already structured), but ensure symbol is present
+            matches.append(r)
+
+    if not matches:
+        return "No bulk deal activity today for your stocks"
+
+    return matches
+
+
 def _groq_client() -> Any:
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
@@ -455,6 +536,7 @@ def chat(req: ChatRequest) -> ChatResponse:
 
     concentration_notes = _portfolio_concentration_flags(req.portfolio)
     concentration_warning = _concentration_warning(tickers, req.investment_amount)
+    bulk_deals = _fetch_nse_bulk_deals_for_portfolio(tickers)
 
     user_payload = {
         "question": req.question,
@@ -466,6 +548,8 @@ def chat(req: ChatRequest) -> ChatResponse:
         "rsi": rsi_by_ticker,
         "concentration_notes": concentration_notes,
         "concentration_warning": concentration_warning,
+        "bulk_deals": bulk_deals,
+        "bulk_deals_note": "Bulk deals indicate large institutional buying or selling activity.",
         "output_format": {
             "must_be_json": True,
             "fields": [
@@ -478,6 +562,7 @@ def chat(req: ChatRequest) -> ChatResponse:
                 "sources_used",
                 "timestamp",
                 "concentration_warning",
+                "bulk_deals",
             ],
         },
     }
@@ -490,6 +575,11 @@ def chat(req: ChatRequest) -> ChatResponse:
                 SYSTEM_PROMPT
                 + " Concentration warning (reference this in the answer if relevant): "
                 + concentration_warning
+            )
+        if bulk_deals:
+            system_prompt = (
+                system_prompt
+                + " Additional context: bulk deals indicate large institutional buying or selling activity."
             )
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -532,12 +622,14 @@ def chat(req: ChatRequest) -> ChatResponse:
             sources_used=fetched_sources_used,
             timestamp=_ist_timestamp_str(),
             concentration_warning=concentration_warning,
+            bulk_deals=bulk_deals,
         )
 
     # Ensure required fields exist; fill safe defaults
     obj["timestamp"] = _ist_timestamp_str()
     obj["sources_used"] = fetched_sources_used
     obj["concentration_warning"] = concentration_warning
+    obj["bulk_deals"] = bulk_deals
 
     # If model didn't include RSI fields, fill from the most relevant ticker we computed.
     primary = tickers[0] if tickers else None
