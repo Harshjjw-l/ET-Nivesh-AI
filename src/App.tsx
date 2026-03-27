@@ -18,6 +18,16 @@ function normalizeTicker(s: string) {
   return s.trim().toUpperCase().replace(/\s+/g, '')
 }
 
+function App() {
+  return (
+    <h1 className="text-3xl font-bold underline">
+      Hello Tailwind
+    </h1>
+  )
+}
+
+export default App
+
 function uniqueNonEmptyTickers(values: string[]) {
   const out: string[] = []
   const seen = new Set<string>()
