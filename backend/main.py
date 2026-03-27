@@ -600,33 +600,65 @@ def test_all_tickers() -> Dict[str, Any]:
 
     return {"working": working, "failed": failed}
 
-def extract_stock_name_from_question(question: str) -> str:
-    q = (question or "").lower()
+def extract_stock_from_question(question: str) -> Optional[str]:
+    """
+    Try to detect a stock name from natural-language question
+    using CSV search suggestions.
+    """
+    if not question or not question.strip():
+        return None
 
-    # Remove common noise words
-    noise_words = [
+    cleaned = question.lower()
+
+    filler_phrases = [
         "should i buy",
-        "is it good",
+        "can i buy",
+        "is it good to buy",
+        "for 1 year",
+        "for one year",
+        "for 6 months",
+        "for six months",
         "for long term",
         "for short term",
-        "what about",
-        "can i buy",
+        "if market crashes",
+        "if the market crashes",
         "now",
         "today",
-        "investment",
-        "portfolio",
-        "if market crashes",
-        "in 1 year",
-        "for 1 year"
+        "right now",
+        "stock",
+        "share",
+        "what about",
+        "bro",
+        "what do you think about",
+        "at current level",
+        "consider buying",
+        "wealth creation"
     ]
 
-    for phrase in noise_words:
-        q = q.replace(phrase, "")
+    for phrase in filler_phrases:
+        cleaned = cleaned.replace(phrase, " ")
 
-    # Remove extra spaces
-    q = re.sub(r"\s+", " ", q).strip()
+    cleaned = re.sub(r"[^a-zA-Z0-9\s]", " ", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
 
-    return q
+    if not cleaned:
+        return None
+
+    matches = search_stocks(cleaned, limit=5)
+
+    best_match = None
+
+    for m in matches:
+        name = m["company_name"].lower()
+
+        if all(word in name for word in cleaned.split()):
+            best_match = m
+            break
+
+    if best_match:
+        return best_match["company_name"]
+
+    return None
 
 
 @app.get("/signals/today")
@@ -643,7 +675,7 @@ def chat(req: ChatRequest) -> ChatResponse:
     # -----------------------------------
     # Step 7: Resolve stock from question
     # -----------------------------------
-    clean_question = extract_stock_name_from_question(req.question)
+    clean_question = extract_stock_from_question(req.question)
 
     print("Clean extracted stock text:", clean_question)
 
