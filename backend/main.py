@@ -8,6 +8,13 @@ import pandas as pd
 import pandas_ta as ta
 import requests
 import yfinance as yf
+from fastapi import FastAPI, Query
+from services.stock_resolver import (
+    load_stock_data,
+    resolve_stock,
+    resolve_portfolio_stocks,
+    search_stocks
+)
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
@@ -19,6 +26,53 @@ except Exception:  # pragma: no cover
 
 
 app = FastAPI(title="ET Nivesh AI")
+
+@app.on_event("startup")
+def startup_event():
+    load_stock_data("data/EQUITY_L.csv")
+
+
+@app.get("/")
+def home():
+    return {"message": "Backend running"}
+
+
+@app.get("/resolve-stock")
+def resolve_stock_api(q: str = Query(...)):
+    return resolve_stock(q)
+
+@app.get("/search-stock")
+def search_stock_api(q: str = Query(...)):
+    return {"results": search_stocks(q, limit=3)}
+@app.post("/analyze")
+def analyze_stock(data: dict):
+    question_stock_input = data.get("question_stock")
+    portfolio = data.get("portfolio", [])
+
+    # Resolve asked stock
+    question_stock = resolve_stock(question_stock_input)
+
+    if question_stock["status"] != "success":
+        return {
+            "status": "error",
+            "message": question_stock["message"]
+        }
+
+    # Resolve portfolio stocks
+    portfolio_result = resolve_portfolio_stocks(portfolio)
+
+    # Combine all tickers
+    all_tickers = [question_stock["ticker"]] + portfolio_result["resolved_tickers"]
+    all_tickers = list(set(all_tickers))
+
+    print("Final tickers for analysis:", all_tickers)
+
+    return {
+        "status": "success",
+        "question_stock": question_stock,
+        "portfolio_result": portfolio_result,
+        "all_tickers": all_tickers
+    }
 
 
 SYSTEM_PROMPT = (
@@ -546,6 +600,34 @@ def test_all_tickers() -> Dict[str, Any]:
 
     return {"working": working, "failed": failed}
 
+def extract_stock_name_from_question(question: str) -> str:
+    q = (question or "").lower()
+
+    # Remove common noise words
+    noise_words = [
+        "should i buy",
+        "is it good",
+        "for long term",
+        "for short term",
+        "what about",
+        "can i buy",
+        "now",
+        "today",
+        "investment",
+        "portfolio",
+        "if market crashes",
+        "in 1 year",
+        "for 1 year"
+    ]
+
+    for phrase in noise_words:
+        q = q.replace(phrase, "")
+
+    # Remove extra spaces
+    q = re.sub(r"\s+", " ", q).strip()
+
+    return q
+
 
 @app.get("/signals/today")
 def today_signals() -> Dict[str, Any]:
@@ -558,7 +640,35 @@ def today_signals() -> Dict[str, Any]:
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
-    tickers = _unique_nse_tickers(req.question, req.portfolio)
+    # -----------------------------------
+    # Step 7: Resolve stock from question
+    # -----------------------------------
+    clean_question = extract_stock_name_from_question(req.question)
+
+    print("Clean extracted stock text:", clean_question)
+
+    question_stock = resolve_stock(clean_question)
+
+    question_ticker = None
+    if question_stock["status"] == "success":
+        question_ticker = question_stock["ticker"]
+
+    # -----------------------------------
+    # Resolve portfolio stocks
+    # -----------------------------------
+    portfolio_result = resolve_portfolio_stocks(req.portfolio)
+
+    # -----------------------------------
+    # Combine all tickers
+    # -----------------------------------
+    tickers = portfolio_result["resolved_tickers"]
+
+    if question_ticker:
+        tickers = [question_ticker] + tickers
+
+    tickers = list(set(tickers))
+
+    print("Final tickers for analysis:", tickers)
 
     prices: Dict[str, Dict[str, Any]] = {}
     rsi_by_ticker: Dict[str, Dict[str, Any]] = {}
@@ -571,23 +681,36 @@ def chat(req: ChatRequest) -> ChatResponse:
             close_col = "Close" if "Close" in df.columns else [c for c in df.columns if c.lower() == "close"][0]
             rsi_val, rsi_expl = _compute_rsi(df[close_col])
             current_price = float(df[close_col].iloc[-1])
+
             if rsi_val is None:
                 fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
             else:
                 fetched_sources_used.append(
                     f"{t}: current price={current_price:.2f}, RSI={rsi_val:.2f}, fetched_at={fetch_time_ist}"
                 )
+
             prices[t] = {
                 "last_20_days": [
-                    {"date": idx.date().isoformat() if hasattr(idx, "date") else str(idx), "close": float(row[close_col])}
+                    {
+                        "date": idx.date().isoformat() if hasattr(idx, "date") else str(idx),
+                        "close": float(row[close_col])
+                    }
                     for idx, row in df.iterrows()
                 ]
             }
-            rsi_by_ticker[t] = {"rsi_value": rsi_val, "rsi_explanation": rsi_expl}
+
+            rsi_by_ticker[t] = {
+                "rsi_value": rsi_val,
+                "rsi_explanation": rsi_expl
+            }
+
         except Exception as e:
             fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
             prices[t] = {"error": str(e)}
-            rsi_by_ticker[t] = {"rsi_value": None, "rsi_explanation": "RSI unavailable due to missing price data."}
+            rsi_by_ticker[t] = {
+                "rsi_value": None,
+                "rsi_explanation": "RSI unavailable due to missing price data."
+            }
 
     concentration_notes = _portfolio_concentration_flags(req.portfolio)
     concentration_warning = _concentration_warning(tickers, req.investment_amount)
@@ -625,17 +748,20 @@ def chat(req: ChatRequest) -> ChatResponse:
     try:
         client = _groq_client()
         system_prompt = SYSTEM_PROMPT
+
         if concentration_warning:
             system_prompt = (
                 SYSTEM_PROMPT
                 + " Concentration warning (reference this in the answer if relevant): "
                 + concentration_warning
             )
+
         if bulk_deals:
             system_prompt = (
                 system_prompt
                 + " Additional context: bulk deals indicate large institutional buying or selling activity."
             )
+
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
@@ -653,16 +779,19 @@ def chat(req: ChatRequest) -> ChatResponse:
             ],
             temperature=0.2,
         )
+
         content = (completion.choices[0].message.content or "").strip()
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
     obj = _safe_json_extract(content)
+
     if not obj:
-        # Fallback: still comply with response schema
         primary = tickers[0] if tickers else None
         rsi_val = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_value") if primary else None
         rsi_expl = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_explanation") if primary else "RSI unavailable."
+
         return ChatResponse(
             answer=(
                 "I couldn't parse the model response as JSON. "
@@ -679,6 +808,28 @@ def chat(req: ChatRequest) -> ChatResponse:
             concentration_warning=concentration_warning,
             bulk_deals=bulk_deals,
         )
+
+    obj["timestamp"] = _ist_timestamp_str()
+    obj["sources_used"] = fetched_sources_used
+    obj["concentration_warning"] = concentration_warning
+    obj["bulk_deals"] = bulk_deals
+
+    primary = tickers[0] if tickers else None
+
+    if "rsi_value" not in obj:
+        obj["rsi_value"] = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_value") if primary else None
+
+    if "rsi_explanation" not in obj or not obj.get("rsi_explanation"):
+        obj["rsi_explanation"] = (
+            (rsi_by_ticker.get(primary, {}) or {}).get("rsi_explanation")
+            if primary else "RSI unavailable."
+        )
+
+    missing = [k for k in ChatResponse.model_fields.keys() if k not in obj]
+    if missing:
+        raise HTTPException(status_code=500, detail=f"Model JSON missing fields: {missing}")
+
+    return ChatResponse(**obj)
 
     # Ensure required fields exist; fill safe defaults
     obj["timestamp"] = _ist_timestamp_str()
