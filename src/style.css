@@ -1,0 +1,348 @@
+:root {
+  --brand-orange: #ff6b35;
+  --brand-navy: #1b2b4b;
+  --bg: #0f172a;
+  --panel: rgba(255, 255, 255, 0.06);
+  --panel-2: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.12);
+  --text: rgba(255, 255, 255, 0.88);
+  --muted: rgba(255, 255, 255, 0.64);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 20% 0%, rgba(255, 107, 53, 0.12), transparent 60%),
+    radial-gradient(900px 600px at 90% 20%, rgba(27, 43, 75, 0.6), transparent 65%), var(--bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  min-height: 100svh;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, rgba(27, 43, 75, 0.7), rgba(27, 43, 75, 0.35));
+  border-right: 1px solid var(--border);
+  padding: 18px;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow);
+}
+
+.brandMark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand-orange), rgba(255, 107, 53, 0.15));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.brandName {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.brandTag {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.panel {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.panelTitle {
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.fieldGroup {
+  margin-bottom: 14px;
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.tickers {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--text);
+  outline: none;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.input:focus {
+  border-color: rgba(255, 107, 53, 0.55);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.18);
+}
+
+.select {
+  appearance: none;
+}
+
+.hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.summary {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.14);
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 2px;
+}
+
+.summaryLabel {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summaryValue {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.note {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.66);
+  line-height: 1.35;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.topTitle {
+  font-weight: 700;
+}
+
+.topMeta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.chat {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 0;
+  flex: 1;
+}
+
+.messages {
+  padding: 18px;
+  overflow: auto;
+}
+
+.msgRow {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.msgRow.user {
+  align-items: flex-end;
+}
+
+.msgRow.assistant {
+  align-items: flex-start;
+}
+
+.bubble {
+  max-width: min(760px, 95%);
+  border-radius: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.bubble.user {
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.22), rgba(255, 107, 53, 0.10));
+  border-color: rgba(255, 107, 53, 0.35);
+}
+
+.bubble.assistant {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.bubbleText {
+  white-space: pre-wrap;
+  line-height: 1.42;
+}
+
+.sourcesCard {
+  width: min(760px, 95%);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.14);
+  padding: 12px 14px;
+}
+
+.sourcesTitle {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 10px;
+}
+
+.sourcesList {
+  display: grid;
+  gap: 10px;
+}
+
+.sourceItem {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 12px;
+}
+
+.sourceTime {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.sourceData {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.composer {
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.18);
+  padding: 12px 18px 16px;
+}
+
+.composerRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.composerInput {
+  height: 44px;
+}
+
+.sendBtn {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 53, 0.5);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.95), rgba(255, 107, 53, 0.65));
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sendBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.composerHint {
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.error {
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: rgba(255, 245, 240, 0.95);
+  background: rgba(255, 107, 53, 0.14);
+  border: 1px solid rgba(255, 107, 53, 0.28);
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
