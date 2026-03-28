@@ -185,7 +185,7 @@ class ChatResponse(BaseModel):
     timestamp: str
     concentration_warning: Optional[str] = None
     bulk_deals: Any = None
-
+    budget_note: Optional[str] = None
 
 _IST_TZ = timezone(timedelta(hours=5, minutes=30))
 
@@ -391,6 +391,36 @@ def _fetch_last_20_days(ticker: str) -> pd.DataFrame:
         raise ValueError(f"Not enough price data for {ticker}")
     return df
 
+def _compute_support_resistance(df: pd.DataFrame, current_price: float, timeframe: str = "long term") -> Dict[str, Any]:
+    """
+    Compute entry, target and stop-loss based on timeframe.
+    """
+    timeframe = (timeframe or "").lower()
+
+    if "intraday" in timeframe:
+        target_multiplier = 1.02   # +2%
+        stop_multiplier = 0.99     # -1%
+        entry_buffer = 0.005       # 0.5%
+    elif "short" in timeframe or "1 month" in timeframe or "3 month" in timeframe:
+        target_multiplier = 1.06   # +6%
+        stop_multiplier = 0.96     # -4%
+        entry_buffer = 0.01        # 1%
+    else:
+        # long term / 12 month
+        target_multiplier = 1.15   # +15%
+        stop_multiplier = 0.92     # -8%
+        entry_buffer = 0.02        # 2%
+
+    entry_low = round(current_price * (1 - entry_buffer), 2)
+    entry_high = round(current_price * (1 + entry_buffer / 2), 2)
+    target = round(current_price * target_multiplier, 2)
+    stop_loss = round(current_price * stop_multiplier, 2)
+
+    return {
+        "entry_price": f"₹{entry_low}–₹{entry_high}",
+        "target_price": target,
+        "stop_loss": stop_loss,
+    }
 
 def _compute_rsi(close_series: pd.Series, length: int = 14) -> Tuple[Optional[float], str]:
     rsi_series = ta.rsi(close_series.astype(float), length=length)
@@ -796,6 +826,7 @@ def chat(req: ChatRequest) -> ChatResponse:
 
     prices: Dict[str, Dict[str, Any]] = {}
     rsi_by_ticker: Dict[str, Dict[str, Any]] = {}
+    technical_levels: Dict[str, Dict[str, Any]] = {}
     fetched_sources_used: List[str] = []
 
     for t in tickers:
@@ -805,7 +836,10 @@ def chat(req: ChatRequest) -> ChatResponse:
             close_col = "Close" if "Close" in df.columns else [c for c in df.columns if c.lower() == "close"][0]
             rsi_val, rsi_expl = _compute_rsi(df[close_col])
             current_price = float(df[close_col].iloc[-1])
-
+            
+            sr = _compute_support_resistance(df, current_price, req.timeframe)
+            technical_levels[t] = sr
+            
             if rsi_val is None:
                 fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
             else:
@@ -839,6 +873,31 @@ def chat(req: ChatRequest) -> ChatResponse:
     concentration_notes = _portfolio_concentration_flags(req.portfolio)
     concentration_warning = _concentration_warning(tickers, req.investment_amount)
     bulk_deals = _fetch_nse_bulk_deals_for_portfolio(tickers)
+    budget_note = None
+
+    primary = question_ticker if question_ticker else (tickers[0] if tickers else None)
+
+    if primary and primary in prices and "error" not in prices[primary]:
+     try:
+        latest_price = prices[primary]["last_20_days"][-1]["close"]
+
+        if req.investment_amount < latest_price:
+            budget_note = (
+              f"⚠️ Your budget of ₹{int(req.investment_amount):,} is less than "
+              f"the current price of ₹{latest_price:,.2f}. "
+              f"You cannot buy even 1 share."
+            )
+        else:
+            shares = int(req.investment_amount // latest_price)
+            remaining_cash = round(req.investment_amount - (shares * latest_price), 2)
+
+            budget_note = (
+               f"With ₹{int(req.investment_amount):,}, you can buy approximately "
+               f"{shares} share(s) at ₹{latest_price:,.2f} each, "
+               f"with about ₹{remaining_cash:,.2f} left."
+            )
+     except Exception:
+        pass
 
     user_payload = {
         "question": req.question,
@@ -848,6 +907,8 @@ def chat(req: ChatRequest) -> ChatResponse:
         "nse_tickers_found": tickers,
         "prices": prices,
         "rsi": rsi_by_ticker,
+        "technical_levels": technical_levels,
+        "budget_note": budget_note,
         "concentration_notes": concentration_notes,
         "concentration_warning": concentration_warning,
         "bulk_deals": bulk_deals,
@@ -865,6 +926,7 @@ def chat(req: ChatRequest) -> ChatResponse:
                 "timestamp",
                 "concentration_warning",
                 "bulk_deals",
+                "budget_note",
             ],
         },
     }
@@ -893,15 +955,21 @@ def chat(req: ChatRequest) -> ChatResponse:
                 {
                     "role": "user",
                     "content": (
-                        "Use the provided NSE price data (last 20 trading days) and RSI info to answer. "
+                        "Use the provided NSE price data (last 20 trading days), RSI info, technical levels, and budget note to answer. "
+                        "Use the provided NSE price data (last 20 trading days), RSI info, technical levels, and budget note to answer. "
+                        "Write the answer in a natural, beginner-friendly, slightly conversational tone. "
+                        "Explain WHY the stock looks attractive or risky in 2–3 lines, not just raw numbers. "
+                        "Always mention RSI meaning in simple words. "
+                        "Always mention entry, target, stop loss, and budget note if available. "
                         "Return ONLY a single valid JSON object with the required fields. "
                         "If multiple tickers exist, focus on the most relevant one to the user's question, "
+                        "but still mention the others briefly in the answer.\n\n"
                         "but still mention the others briefly in the answer.\n\n"
                         f"{json.dumps(user_payload, ensure_ascii=False)}"
                     ),
                 },
             ],
-            temperature=0.2,
+            temperature=0.45,
         )
 
         content = (completion.choices[0].message.content or "").strip()
@@ -937,7 +1005,8 @@ def chat(req: ChatRequest) -> ChatResponse:
     obj["sources_used"] = fetched_sources_used
     obj["concentration_warning"] = concentration_warning
     obj["bulk_deals"] = bulk_deals
-
+    
+    obj["budget_note"] = budget_note 
     primary = tickers[0] if tickers else None
 
     if "rsi_value" not in obj:
