@@ -115,17 +115,36 @@ export default function App() {
     abortRef.current = controller
 
     try {
-      const payload = { question: q, portfolio }
-      const { answer, sources, rsi, macdSignal } = await postChat(payload, controller.signal)
+        const payload = {
+        question: q,
+        portfolio: portfolio.tickers,
+        investment_amount: portfolio.amountInr ?? 0,
+        timeframe:
+          portfolio.timeframe === 'intraday'
+            ? 'intraday'
+            : portfolio.timeframe === 'short_term'
+            ? '1 month'
+            : '12 month',
+      }
+      const result : any = await postChat(payload, controller.signal)
 
       const assistantMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
-        content: answer || '(No response returned.)',
-        indicators: rsi != null || macdSignal ? { rsi, macdSignal } : undefined,
+        content: result.answer || '(No response returned.)',
+        indicators:
+          result.rsi_value != null
+            ? {
+                rsi: result.rsi_value,
+                macdSignal: undefined,
+              }
+            : undefined,
         sources:
-          sources && sources.length
-            ? sources
+          result.sources_used && result.sources_used.length
+            ? result.sources_used.map((s: string) => ({
+                timestamp: result.timestamp || nowIso(),
+                dataUsed: s,
+              }))
             : [
                 {
                   timestamp: nowIso(),
@@ -134,6 +153,15 @@ export default function App() {
                   }, timeframe: ${portfolio.timeframe} }`,
                 },
               ],
+      
+        // NEW backend fields
+        entry_price: result.entry_price,
+        target_price: result.target_price,
+        stop_loss: result.stop_loss,
+        rsi_explanation: result.rsi_explanation,
+        budget_note: result.budget_note,
+        concentration_warning: result.concentration_warning,
+        bulk_deals: result.bulk_deals,
       }
       setMessages((m) => [...m, assistantMsg])
     } catch (e) {
@@ -156,7 +184,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto grid min-h-screen max-w-[1600px] grid-cols-1 md:grid-cols-[340px_1fr]">
+    <div className="mx-auto grid min-h-screen max-w-[1600px] grid-cols-1 md:grid-cols-[340px_1fr]">
         <aside className="border-b border-white/10 bg-slate-900/70 p-4 md:border-r md:border-b-0 md:p-5">
           <div className="rounded-2xl border border-white/15 bg-black/20 p-3">
             <div className="flex items-center gap-3">
@@ -289,6 +317,48 @@ export default function App() {
                       }`}
                     >
                       <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                      {m.role === 'assistant' && (
+                        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                           {m.entry_price && (
+                            <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3">
+                             <div className="text-xs text-white/65">Entry Price</div>
+                             <div className="mt-1 text-sm font-semibold text-white">{m.entry_price}</div>
+                            </div>
+                       )}
+
+                            {m.target_price && (
+                             <div className="rounded-xl border border-blue-400/30 bg-blue-500/10 p-3">
+                              <div className="text-xs text-white/65">Target Price</div>
+                              <div className="mt-1 text-sm font-semibold text-white">{m.target_price}</div>
+                             </div>
+                        )}
+
+                             {m.stop_loss && (
+                              <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-3">
+                               <div className="text-xs text-white/65">Stop Loss</div>
+                               <div className="mt-1 text-sm font-semibold text-white">{m.stop_loss}</div>
+                              </div>
+                        )}
+                      </div>
+                    )}
+                    {m.role === 'assistant' && m.rsi_explanation ? (
+                     <div className="mt-3 rounded-xl border border-yellow-400/30 bg-yellow-500/10 p-3 text-xs text-white/85">
+                        <div className="mb-1 font-semibold text-white/90">RSI Explanation</div>
+                        <div>{m.rsi_explanation}</div>
+                      </div>
+                    ) : null}
+                    {m.role === 'assistant' && m.budget_note ? (
+                     <div className="mt-3 rounded-xl border border-cyan-400/30 bg-cyan-500/10 p-3 text-xs text-white/85">
+                      <div className="mb-1 font-semibold text-white/90">Budget Analysis</div>
+                      <div>{m.budget_note}</div>
+                     </div>
+                    ) : null}
+                    {m.role === 'assistant' && m.concentration_warning ? (
+                     <div className="mt-3 rounded-xl border border-orange-400/30 bg-orange-500/10 p-3 text-xs text-white/85">
+                       <div className="mb-1 font-semibold text-white/90">Risk Warning</div>
+                       <div>{m.concentration_warning}</div>
+                      </div>
+                    ) : null}
                     </div>
 
                     {m.role === 'assistant' && m.sources && m.sources.length ? (

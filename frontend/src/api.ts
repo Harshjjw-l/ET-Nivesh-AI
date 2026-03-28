@@ -1,31 +1,24 @@
-import type { ChatRequest, SourceItem } from './types'
+import type { ChatRequest } from './types'
 import type { BulkDeal } from './types'
 
-type ChatResponse =
-  | {
-      answer: string
-      sources?: SourceItem[]
-      rsi?: number | string | null
-      macdSignal?: string | null
-      macd_signal?: string | null
-    }
-  | {
-      response: string
-      sources?: SourceItem[]
-      rsi?: number | string | null
-      macdSignal?: string | null
-      macd_signal?: string | null
-    }
-  | {
-      message: string
-      sources?: SourceItem[]
-      rsi?: number | string | null
-      macdSignal?: string | null
-      macd_signal?: string | null
-    }
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+type ChatResponse = {
+  answer: string
+  entry_price?: string | number | null
+  target_price?: string | number | null
+  stop_loss?: string | number | null
+  rsi_value?: number | string | null
+  rsi_explanation?: string
+  sources_used?: string[]
+  timestamp?: string
+  concentration_warning?: string | null
+  bulk_deals?: unknown
+  budget_note?: string | null
+}
 
 export async function postChat(payload: ChatRequest, signal?: AbortSignal) {
-  const res = await fetch('http://localhost:8000/chat', {
+  const res = await fetch(`${API_BASE}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -38,13 +31,7 @@ export async function postChat(payload: ChatRequest, signal?: AbortSignal) {
   }
 
   const data = (await res.json()) as ChatResponse
-  const answer =
-    'answer' in data ? data.answer : 'response' in data ? data.response : 'message' in data ? data.message : ''
-  const sources = 'sources' in data ? data.sources : undefined
-  const rsi = 'rsi' in data ? data.rsi : undefined
-  const macdSignal = 'macdSignal' in data ? data.macdSignal : 'macd_signal' in data ? data.macd_signal : undefined
-
-  return { answer, sources, rsi, macdSignal }
+  return data
 }
 
 type TodaySignalsResponse = {
@@ -53,15 +40,19 @@ type TodaySignalsResponse = {
 }
 
 export async function getTodaySignals(signal?: AbortSignal) {
-  const res = await fetch('http://localhost:8000/signals/today', {
+  const res = await fetch(`${API_BASE}/signals/today`, {
     method: 'GET',
     signal,
   })
+
   if (!res.ok) {
     const text = await res.text().catch(() => '')
     throw new Error(`Signals request failed (${res.status}): ${text || res.statusText}`)
   }
-  const data = (await res.json()) as TodaySignalsResponse
-  return { timestamp: data.timestamp, deals: Array.isArray(data.deals) ? data.deals : [] }
-}
 
+  const data = (await res.json()) as TodaySignalsResponse
+  return {
+    timestamp: data.timestamp,
+    deals: Array.isArray(data.deals) ? data.deals : [],
+  }
+}

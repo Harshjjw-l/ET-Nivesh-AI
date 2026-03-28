@@ -9,13 +9,15 @@ import pandas_ta as ta
 import requests
 import yfinance as yf
 from fastapi import FastAPI, Query
+
 from services.stock_resolver import (
     load_stock_data,
     resolve_stock,
     resolve_portfolio_stocks,
-    search_stocks,
+    search_stocks
 )
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 load_dotenv()
@@ -26,6 +28,13 @@ except Exception:  # pragma: no cover
 
 
 app = FastAPI(title="ET Nivesh AI")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # ── INPUT NORMALIZATION / ALIAS HELPERS ──────────────────────────
 def _normalize_ticker(raw: str) -> Optional[str]:
     t = (raw or "").strip().upper()
@@ -1005,8 +1014,8 @@ def chat(req: ChatRequest) -> ChatResponse:
     obj["sources_used"] = fetched_sources_used
     obj["concentration_warning"] = concentration_warning
     obj["bulk_deals"] = bulk_deals
-    
-    obj["budget_note"] = budget_note 
+    obj["budget_note"] = budget_note
+
     primary = tickers[0] if tickers else None
 
     if "rsi_value" not in obj:

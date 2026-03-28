@@ -8,7 +8,9 @@ export type Portfolio = {
 
 export type ChatRequest = {
   question: string
-  portfolio: Portfolio
+  portfolio: string[]
+  investment_amount: number
+  timeframe: string
 }
 
 export type SourceItem = {
@@ -25,6 +27,14 @@ export type ChatMessage = {
     rsi?: number | string | null
     macdSignal?: string | null
   }
+
+  entry_price?: string | number | null
+  target_price?: string | number | null
+  stop_loss?: string | number | null
+  rsi_explanation?: string
+  budget_note?: string | null
+  concentration_warning?: string | null
+  bulk_deals?: unknown
 }
 
 export type BulkDeal = {
@@ -40,4 +50,3 @@ export type BulkDeal = {
   dealDate?: string
   [key: string]: unknown
 }
-
