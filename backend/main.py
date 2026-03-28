@@ -13,7 +13,7 @@ from services.stock_resolver import (
     load_stock_data,
     resolve_stock,
     resolve_portfolio_stocks,
-    search_stocks
+    search_stocks,
 )
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
