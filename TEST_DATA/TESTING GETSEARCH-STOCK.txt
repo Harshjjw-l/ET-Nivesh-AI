@@ -1,0 +1,105 @@
+TESTING GET\SEARCH-STOCK
+
+test 1)
+
+q=adani
+
+	
+Response body
+Download
+{
+  "results": [
+    {
+      "symbol": "ADANIENSOL",
+      "company_name": "Adani Energy Solutions Limited",
+      "ticker": "ADANIENSOL.NS"
+    },
+    {
+      "symbol": "ADANIENT",
+      "company_name": "Adani Enterprises Limited",
+      "ticker": "ADANIENT.NS"
+    },
+    {
+      "symbol": "ADANIGREEN",
+      "company_name": "Adani Green Energy Limited",
+      "ticker": "ADANIGREEN.NS"
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "company_name": "Adani Ports and Special Economic Zone Limited",
+      "ticker": "ADANIPORTS.NS"
+    },
+    {
+      "symbol": "ADANIPOWER",
+      "company_name": "Adani Power Limited",
+      "ticker": "ADANIPOWER.NS"
+    }
+  ]
+
+
+test 2)
+
+q=sbi
+
+{
+  "results": [
+    {
+      "symbol": "SBICARD",
+      "company_name": "SBI Cards and Payment Services Limited",
+      "ticker": "SBICARD.NS"
+    },
+    {
+      "symbol": "SBILIFE",
+      "company_name": "SBI Life Insurance Company Limited",
+      "ticker": "SBILIFE.NS"
+    },
+    {
+      "symbol": "SBIN",
+      "company_name": "State Bank of India",
+      "ticker": "SBIN.NS"
+    },
+    {
+      "symbol": "KREBSBIO",
+      "company_name": "Krebs Biochemicals and Industries Limited",
+      "ticker": "KREBSBIO.NS"
+    }
+  ]
+}
+
+
+test 3)
+
+q=reliance
+
+
+  "results": [
+    {
+      "symbol": "RELIANCE",
+      "company_name": "Reliance Industries Limited",
+      "ticker": "RELIANCE.NS"
+    },
+    {
+      "symbol": "RCOM",
+      "company_name": "Reliance Communications Limited",
+      "ticker": "RCOM.NS"
+    },
+    {
+      "symbol": "RELCHEMQ",
+      "company_name": "Reliance Chemotex Industries Limited",
+      "ticker": "RELCHEMQ.NS"
+    },
+    {
+      "symbol": "RELINFRA",
+      "company_name": "Reliance Infrastructure Limited",
+      "ticker": "RELINFRA.NS"
+    },
+    {
+      "symbol": "RIIL",
+      "company_name": "Reliance Industrial Infrastructure Limited",
+      "ticker": "RIIL.NS"
+    }
+  ]
+}
+
+
+

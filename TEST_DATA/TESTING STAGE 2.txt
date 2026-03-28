@@ -1,0 +1,561 @@
+TESTING STAGE 2
+
+
+Category A
+Single stock — simple questions
+
+test 1)
+
+{"question": "Should I buy Reliance?", "portfolio": ["RELIANCE"], "investment_amount": 50000, "timeframe": "long term"}
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹111.27–₹114.11",
+    "target_price": 128.0,
+    "stop_loss": 105.2,
+    "rsi_value": 40.65045003314503,
+    "rsi_explanation": "RSI is 40.65 — neutral zone. No strong signal either way.",
+    "sources_used": [
+        "RELCHEMQ.NS: price=₹113.54, RSI=40.65, support=₹108.45, resistance=₹128.0, fetched_at=10:34 IST",
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=10:34 IST"
+    ],
+    "timestamp": "2026-03-28 10:34:46 IST",
+    "concentration_warning": "RELCHEMQ would make up 50% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹1321.14–₹1354.84",
+    "target_price": 1434.0,
+    "stop_loss": 1267.79,
+    "rsi_value": 29.70190671200046,
+    "rsi_explanation": "RSI is 29.70 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=11:04 IST"
+    ],
+    "timestamp": "2026-03-28 11:05:04 IST",
+    "concentration_warning": "RELIANCE would make up 100% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+test 2)
+
+{"question": "What do you think about Tata Consultancy Services?", "portfolio": ["HDFCBANK"], "investment_amount": 30000, "timeframe": "short term"}
+
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹2342.0–₹2401.75",
+    "target_price": 2688.6,
+    "stop_loss": 2277.56,
+    "rsi_value": 26.932163275056634,
+    "rsi_explanation": "RSI is 26.93 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=10:35 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=10:35 IST"
+    ],
+    "timestamp": "2026-03-28 10:35:57 IST",
+    "concentration_warning": "TCS would make up 50% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹2342.0–₹2401.75",
+    "target_price": 2688.6,
+    "stop_loss": 2277.56,
+    "rsi_value": 26.932163275056634,
+    "rsi_explanation": "RSI is 26.93 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=11:06 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=11:06 IST"
+    ],
+    "timestamp": "2026-03-28 11:06:13 IST",
+    "concentration_warning": "TCS would make up 50% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 3)
+
+{"question": "Bro what about Infosys, is it good now?", "portfolio": ["TCS", "WIPRO"], "investment_amount": 25000, "timeframe": "3 months"}
+
+{
+    "answer": "No, avoid right now\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹101.92–₹104.52",
+    "target_price": 120.73,
+    "stop_loss": 97.45,
+    "rsi_value": 24.115135026200225,
+    "rsi_explanation": "RSI is 24.12 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "EDELWEISS.NS: price=₹104.00, RSI=24.12, support=₹100.46, resistance=₹120.73, fetched_at=10:36 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=10:36 IST",
+        "WIPRO.NS: price=₹191.60, RSI=41.23, support=₹187.0, resistance=₹205.95, fetched_at=10:36 IST"
+    ],
+    "timestamp": "2026-03-28 10:36:42 IST",
+    "concentration_warning": "EDELWEISS would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "No, avoid right now\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹101.92–₹104.52",
+    "target_price": 120.73,
+    "stop_loss": 97.45,
+    "rsi_value": 24.115135026200225,
+    "rsi_explanation": "RSI is 24.12 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "EDELWEISS.NS: price=₹104.00, RSI=24.12, support=₹100.46, resistance=₹120.73, fetched_at=11:06 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=11:06 IST",
+        "WIPRO.NS: price=₹191.60, RSI=41.23, support=₹187.0, resistance=₹205.95, fetched_at=11:06 IST"
+    ],
+    "timestamp": "2026-03-28 11:06:47 IST",
+    "concentration_warning": "EDELWEISS would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 4)
+
+{"question": "Is SBI a good buy for long term?", "portfolio": ["SBIN", "HDFCBANK"], "investment_amount": 40000, "timeframe": "long term"}
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹213.62–₹219.07",
+    "target_price": 232.0,
+    "stop_loss": 187.28,
+    "rsi_value": 44.0279781745569,
+    "rsi_explanation": "RSI is 44.03 — neutral zone. No strong signal either way.",
+    "sources_used": [
+        "BLISSGVS.NS: price=₹217.98, RSI=44.03, support=₹193.07, resistance=₹232.0, fetched_at=10:37 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=10:37 IST",
+        "SBIN.NS: price=₹1019.50, RSI=23.64, support=₹1013.0, resistance=₹1215.4, fetched_at=10:37 IST"
+    ],
+    "timestamp": "2026-03-28 10:37:39 IST",
+    "concentration_warning": "BLISSGVS would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "Yes, consider buying\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹213.62–₹219.07",
+    "target_price": 232.0,
+    "stop_loss": 187.28,
+    "rsi_value": 44.0279781745569,
+    "rsi_explanation": "RSI is 44.03 — neutral zone. No strong signal either way.",
+    "sources_used": [
+        "BLISSGVS.NS: price=₹217.98, RSI=44.03, support=₹193.07, resistance=₹232.0, fetched_at=11:08 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=11:08 IST",
+        "SBIN.NS: price=₹1019.50, RSI=23.64, support=₹1013.0, resistance=₹1215.4, fetched_at=11:08 IST"
+    ],
+    "timestamp": "2026-03-28 11:08:34 IST",
+    "concentration_warning": "BLISSGVS would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 5)
+
+{"question": "Should I add Bajaj Finance to my investments?", "portfolio": ["RELIANCE", "TCS"], "investment_amount": 60000, "timeframe": "long term"}
+
+{
+    "answer": "No, avoid right now\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹8722.98–₹8945.5",
+    "target_price": 10187.0,
+    "stop_loss": 8480.23,
+    "rsi_value": 30.201888448142633,
+    "rsi_explanation": "RSI is 30.20 — neutral zone. No strong signal either way.",
+    "sources_used": [
+        "BAJAJ-AUTO.NS: price=₹8901.00, RSI=30.20, support=₹8742.5, resistance=₹10187.0, fetched_at=10:38 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=10:38 IST",
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=10:38 IST"
+    ],
+    "timestamp": "2026-03-28 10:38:13 IST",
+    "concentration_warning": "BAJAJ-AUTO would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "No, avoid right now\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹8722.98–₹8945.5",
+    "target_price": 10187.0,
+    "stop_loss": 8480.23,
+    "rsi_value": 30.201888448142633,
+    "rsi_explanation": "RSI is 30.20 — neutral zone. No strong signal either way.",
+    "sources_used": [
+        "BAJAJ-AUTO.NS: price=₹8901.00, RSI=30.20, support=₹8742.5, resistance=₹10187.0, fetched_at=11:09 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=11:09 IST",
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=11:09 IST"
+    ],
+    "timestamp": "2026-03-28 11:09:33 IST",
+    "concentration_warning": "BAJAJ-AUTO would make up 33% of your portfolio. Buying more increases risk if this stock falls. Consider diversifying across at least 4–5 stocks.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+Category B
+Portfolio summary questions
+
+B1
+
+Overall portfolio health
+
+{"question": "How is my portfolio doing overall?", "portfolio": ["RELIANCE", "TCS", "HDFCBANK", "INFY"], "investment_amount": 200000, "timeframe": "long term"}
+Check in response:
+all 4 stocks in sources
+entry price = N/A or not applicable
+answer covers all stocks
+identifies strongest and weakest
+{
+    "answer": "Hold and wait\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "₹256.51–₹263.06",
+    "target_price": 332.0,
+    "stop_loss": 250.26,
+    "rsi_value": 19.551268054681234,
+    "rsi_explanation": "RSI is 19.55 — oversold (price fell too fast, may bounce). Potential buy opportunity.",
+    "sources_used": [
+        "5PAISA.NS: price=₹261.75, RSI=19.55, support=₹258.0, resistance=₹332.0, fetched_at=13:14 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=13:14 IST",
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=13:14 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=13:14 IST",
+        "INFY.NS: price=₹1269.70, RSI=58.05, support=₹1215.1, resistance=₹1335.0, fetched_at=13:14 IST"
+    ],
+    "timestamp": "2026-03-28 13:15:00 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+after modification
+
+{
+    "answer": "Hold and wait\n\n⚠️ This is for informational purposes only — not financial advice. The final decision is always yours.",
+    "entry_price": "Not applicable — portfolio summary",
+    "target_price": "Not applicable — portfolio summary",
+    "stop_loss": "Not applicable — portfolio summary",
+    "rsi_value": "RELIANCE.NS: 29.70, TCS.NS: 26.93, INFY.NS: 58.05, HDFCBANK.NS: 24.35",
+    "rsi_explanation": "Mixed RSI signals across your portfolio holdings.",
+    "sources_used": [
+        "RELIANCE.NS: price=₹1348.10, RSI=29.70, support=₹1307.0, resistance=₹1434.0, fetched_at=13:31 IST",
+        "TCS.NS: price=₹2389.80, RSI=26.93, support=₹2348.0, resistance=₹2688.6, fetched_at=13:31 IST",
+        "INFY.NS: price=₹1269.70, RSI=58.05, support=₹1215.1, resistance=₹1335.0, fetched_at=13:31 IST",
+        "HDFCBANK.NS: price=₹756.20, RSI=24.35, support=₹741.05, resistance=₹912.0, fetched_at=13:31 IST"
+    ],
+    "timestamp": "2026-03-28 13:31:25 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{
+    "answer": "Your portfolio is currently in a mixed state, with most stocks showing oversold conditions based on their RSI values. RELIANCE.NS, HDFCBANK.NS, and TCS.NS are all considered oversold, which might indicate potential for a bounce. INFY.NS is in a neutral zone. Other stocks in your portfolio like TCS.NS and INFY.NS are also worth monitoring closely.",
+    "entry_price": "750-800 for HDFCBANK.NS, considering its current oversold state",
+    "target_price": "850-900 for HDFCBANK.NS, expecting a bounce",
+    "stop_loss": "720 for HDFCBANK.NS, to limit potential losses",
+    "rsi_value": "24.35 for HDFCBANK.NS, indicating an oversold condition",
+    "rsi_explanation": "RSI is 24.35, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:16 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:16 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:16 IST",
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=14:16 IST"
+    ],
+    "timestamp": "2026-03-28 14:16:52 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+B2
+Which stock to focus on
+Expect: Comparison of all 3, clear recommendation on which to prioritise
+{"question": "Which of my stocks should I focus on right now?", "portfolio": ["WIPRO", "NTPC", "SUNPHARMA"], "investment_amount": 90000, "timeframe": "short term"}
+
+{
+    "answer": "SUNPHARMA.NS is the most relevant stock to focus on right now due to its low RSI value, indicating a potential bounce. NTPC.NS and WIPRO.NS are in neutral zones and may not offer the same short-term opportunities.",
+    "entry_price": "1750-1800",
+    "target_price": "1850",
+    "stop_loss": "1700",
+    "rsi_value": 28.35,
+    "rsi_explanation": "RSI is 28.35, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "SUNPHARMA.NS: current price=1793.60, RSI=28.35, fetched_at=14:17 IST",
+        "NTPC.NS: current price=375.65, RSI=46.06, fetched_at=14:17 IST",
+        "WIPRO.NS: current price=191.60, RSI=41.23, fetched_at=14:17 IST"
+    ],
+    "timestamp": "2026-03-28 14:17:49 IST",
+    "concentration_warning": "SUNPHARMA makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+B3
+Diversification question
+Expect: Advice on adding a different sector stock, concentration check runs
+{"question": "Should I diversify my portfolio or is it balanced?", "portfolio": ["TCS", "INFY", "WIPRO", "TECHM"], "investment_amount": 150000, "timeframe": "long term"}
+
+{
+    "answer": "Your portfolio seems to be concentrated in the IT sector, with all four stocks being major players in this industry. Considering the long-term timeframe, it might be beneficial to diversify across other sectors to minimize risk. However, given the current RSI values, none of the stocks are strongly overheated or deeply beaten down, suggesting a neutral stance.",
+    "entry_price": "Based on the current prices, a potential entry point for TECHM.NS could be around 1380-1400, considering its recent price action and RSI value of 53.02, which is neutral.",
+    "target_price": "A potential target price for TECHM.NS could be around 1450-1470, given its historical price movements and the overall market sentiment.",
+    "stop_loss": "A stop loss for TECHM.NS could be set around 1320-1340, to limit potential losses if the price moves against the expected direction.",
+    "rsi_value": "53.01584440627827",
+    "rsi_explanation": "RSI is 53.02, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "TECHM.NS: current price=1391.60, RSI=53.02, fetched_at=14:19 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:19 IST",
+        "WIPRO.NS: current price=191.60, RSI=41.23, fetched_at=14:19 IST",
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=14:19 IST"
+    ],
+    "timestamp": "2026-03-28 14:19:41 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+Category C
+Concentration risk scenarios
+
+C1
+Single stock portfolio — extreme concentration
+Expect: Concentration warning fires strongly — 100% in one stock
+{"question": "Should I buy more Reliance?", "portfolio": ["RELIANCE"], "investment_amount": 100000, "timeframe": "long term"}
+
+{
+    "answer": "Consider buying more Reliance, but be aware of concentration risk. Other stocks are not present in your portfolio, so diversification is recommended. The RSI value of 29.70 indicates the stock is oversold and may bounce.",
+    "entry_price": "1340-1360",
+    "target_price": "1420-1450",
+    "stop_loss": "1280",
+    "rsi_value": 29.70190671200046,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:20 IST"
+    ],
+    "timestamp": "2026-03-28 14:20:27 IST",
+    "concentration_warning": "RELIANCE makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+C2
+{"question": "Should I buy Maruti?", "portfolio": ["RELIANCE", "TCS", "HDFCBANK", "INFY", "SBIN"], "investment_amount": 250000, "timeframe": "long term"}
+
+{
+    "answer": "Consider buying Maruti as it's currently oversold with an RSI of 20.03, which may indicate a potential bounce. Other stocks like HDFCBANK, SBIN, TCS, and RELIANCE are also oversold, but Maruti's RSI is the lowest.",
+    "entry_price": "12000-12500",
+    "target_price": "14000",
+    "stop_loss": "11000",
+    "rsi_value": 20.03,
+    "rsi_explanation": "RSI is 20.03, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:21 IST",
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=14:21 IST",
+        "SBIN.NS: current price=1019.50, RSI=23.64, fetched_at=14:21 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:21 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:21 IST",
+        "MARUTI.NS: current price=12389.00, RSI=20.03, fetched_at=14:21 IST"
+    ],
+    "timestamp": "2026-03-28 14:21:12 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+Category D
+Edge cases — things that can break demo
+D1
+Intraday timeframe
+Expect: Short term signals, MACD more relevant than long term averages
+{"question": "Is HDFC Bank good for intraday today?", "portfolio": ["HDFCBANK"], "investment_amount": 20000, "timeframe": "intraday"}
+{
+    "answer": "HDFC Bank might be a good option for intraday trading today, considering its RSI value of 24.35, which indicates an oversold condition and potential for a bounce. Other stocks are not relevant in this context as HDFCBANK is the only one in your portfolio.",
+    "entry_price": "755-765",
+    "target_price": "775",
+    "stop_loss": "745",
+    "rsi_value": 24.351110884143544,
+    "rsi_explanation": "RSI is 24.35, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:21 IST"
+    ],
+    "timestamp": "2026-03-28 14:21:57 IST",
+    "concentration_warning": "HDFCBANK makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+Check in response:
+HDFCBANK.NS fetched
+answer mentions short term context
+MACD signal used
+
+D2
+Small investment amount
+Expect: Sensible advice for small investor — entry price should be realistic for ₹5000
+{"question": "I have only 5000 rupees. Should I buy TCS?", "portfolio": ["TCS"], "investment_amount": 5000, "timeframe": "long term"}
+
+{
+    "answer": "Considering your long-term investment goal and the current oversold RSI value of 26.93 for TCS, it might be a good time to buy. However, please note that TCS already makes up 100% of your portfolio, which increases your risk if the stock falls. It's essential to consider diversifying your portfolio.",
+    "entry_price": "2350-2400",
+    "target_price": "2600-2650",
+    "stop_loss": "2250",
+    "rsi_value": 26.93,
+    "rsi_explanation": "RSI is 26.93, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:22 IST"
+    ],
+    "timestamp": "2026-03-28 14:22:44 IST",
+    "concentration_warning": "TCS makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+Check in response:
+TCS price fetched — currently ~₹2389
+answer acknowledges limited budget
+does not give unrealistic advice
+
+
+D3
+
+Market crash scenario
+Expect: Defensive advice — not a panic buy recommendation
+{"question": "If the market crashes next month what should I do with my portfolio?", "portfolio": ["RELIANCE", "ADANIENT", "TCS"], "investment_amount": 300000, "timeframe": "short term"}
+
+{
+    "answer": "If the market crashes next month, consider holding or diversifying your portfolio. Given the RSI values, TCS, ADANIENT, and RELIANCE are all oversold, which might indicate a potential bounce. However, it's crucial to manage risk, especially since TCS makes up 33% of your portfolio.",
+    "entry_price": "2300-2500 for TCS, 1800-2000 for ADANIENT, and 1300-1400 for RELIANCE",
+    "target_price": "2600-2800 for TCS, 2000-2200 for ADANIENT, and 1450-1550 for RELIANCE",
+    "stop_loss": "2200 for TCS, 1700 for ADANIENT, and 1250 for RELIANCE",
+    "rsi_value": "26.93 for TCS, 18.11 for ADANIENT, and 29.70 for RELIANCE",
+    "rsi_explanation": "RSI values indicate oversold conditions for all three stocks, suggesting potential for a price bounce.",
+    "sources_used": [
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:23 IST",
+        "ADANIENT.NS: current price=1823.00, RSI=18.11, fetched_at=14:23 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:23 IST"
+    ],
+    "timestamp": "2026-03-28 14:23:45 IST",
+    "concentration_warning": "TCS makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+Check in response:
+all 3 stocks in sources
+defensive advice given
+stop loss values highlighted
+disclaimer present
+
+
+D4
+Unknown stock — graceful failure
+Expect: Clear message that stock not found — does not default silently to another stock
+{"question": "Should I buy XYZ Corp?", "portfolio": ["RELIANCE"], "investment_amount": 50000, "timeframe": "long term"}
+
+{
+    "answer": "Consider buying RELIANCE.NS, but be aware of concentration risk and consider diversifying your portfolio. Other tickers like XYZ Corp are not found in the provided data.",
+    "entry_price": "1300-1350",
+    "target_price": "1450-1500",
+    "stop_loss": "1250",
+    "rsi_value": 29.70190671200046,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:24 IST"
+    ],
+    "timestamp": "2026-03-28 14:24:46 IST",
+    "concentration_warning": "RELIANCE makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+Check in response:
+XYZ not silently ignored
+message says stock not found on NSE
+does not pretend to answer about XYZ
+
+
+D5
+First time investor language
+Expect: Simple plain English answer — no jargon without explanation
+{"question": "I am new to stocks. I have heard Reliance is good. Should I invest?", "portfolio": [], "investment_amount": 10000, "timeframe": "long term"}
+
+{
+    "answer": "Consider investing in Reliance, given its current oversold status. However, since it's your first time investing, it's essential to understand that putting all your money into one stock can be risky. Other stocks might be available, but Reliance is the most relevant one based on your question.",
+    "entry_price": "1300-1350",
+    "target_price": "1450-1500",
+    "stop_loss": "1250",
+    "rsi_value": 29.70190671200046,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:25 IST"
+    ],
+    "timestamp": "2026-03-28 14:25:30 IST",
+    "concentration_warning": "RELIANCE makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+Check in response:
+RELIANCE.NS fetched
+RSI explained in simple words
+no raw jargon without explanation
+encouraging but cautious tone
+disclaimer present
+
+
+Category E
+Judge demo questions — these will definitely be asked
+E1
+The classic judge question
+{"question": "Should I buy Reliance Industries right now?", "portfolio": ["RELIANCE", "HDFCBANK", "TCS"], "investment_amount": 100000, "timeframe": "long term"}
+
+{
+    "answer": "Consider buying Reliance Industries, as its RSI is 29.70, indicating it's oversold and may bounce. Other stocks in your portfolio, like HDFCBANK and TCS, also show similar RSI values, but Reliance is the most relevant to your question.",
+    "entry_price": "1300-1350",
+    "target_price": "1450-1500",
+    "stop_loss": "1250",
+    "rsi_value": 29.7,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:26 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:26 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:26 IST"
+    ],
+    "timestamp": "2026-03-28 14:26:18 IST",
+    "concentration_warning": "HDFCBANK makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+E2
+Portfolio awareness demo
+{"question": "I hold Reliance, HDFC and TCS. Which should I add more money to?", "portfolio": ["RELIANCE", "HDFCBANK", "TCS"], "investment_amount": 150000, "timeframe": "long term"}
+
+{
+    "answer": "Consider adding more money to Reliance, given its recent price movement and RSI value. However, please note the concentration warning for HDFCBANK.",
+    "entry_price": "1300-1350",
+    "target_price": "1450-1500",
+    "stop_loss": "1250",
+    "rsi_value": 29.7,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:26 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=14:26 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=14:26 IST"
+    ],
+    "timestamp": "2026-03-28 14:26:48 IST",
+    "concentration_warning": "HDFCBANK makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+E3
+Rajesh persona — your target user
+{"question": "I am a salaried person and want to invest for my child's future. Is HDFC Bank safe?", "portfolio": ["HDFCBANK"], "investment_amount": 50000, "timeframe": "long term"}
+
+{
+    "answer": "HDFC Bank is a well-established bank in India, but having 100% of your portfolio in one stock is risky. Consider diversifying.",
+    "entry_price": "750-780",
+    "target_price": "850-900",
+    "stop_loss": "720",
+    "rsi_value": 24.35,
+    "rsi_explanation": "RSI is 24.35, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=14:27 IST"
+    ],
+    "timestamp": "2026-03-28 14:27:28 IST",
+    "concentration_warning": "HDFCBANK makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+How to score your backend
+Run all 13 test cases. For each one mark: Pass / Partial / Fail.
+12–13 pass → backend is demo ready. Go to frontend.
+9–11 pass → fix failures in Category D first, then go to frontend.
+Below 9 → alias fix is urgent before anything else.
+
+
