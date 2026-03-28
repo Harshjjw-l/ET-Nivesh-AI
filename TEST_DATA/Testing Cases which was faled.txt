@@ -1,0 +1,82 @@
+Testing Cases which was faled
+
+
+
+Test 1 — Unknown stock
+{
+  "question": "Should I buy XYZ Corp?",
+  "portfolio": ["RELIANCE"],
+  "investment_amount": 50000,
+  "timeframe": "long term"
+}
+
+
+{
+    "answer": "Consider buying RELIANCE.NS, but be aware of concentration risk and consider diversifying your portfolio.",
+    "entry_price": "1300-1350",
+    "target_price": "1450-1500",
+    "stop_loss": "1250",
+    "rsi_value": 29.70190671200046,
+    "rsi_explanation": "RSI is 29.70, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=15:41 IST"
+    ],
+    "timestamp": "2026-03-28 15:41:36 IST",
+    "concentration_warning": "RELIANCE makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+Test 2 — Portfolio summary
+{
+  "question": "How is my portfolio doing overall?",
+  "portfolio": ["RELIANCE", "TCS", "HDFCBANK", "INFY"],
+  "investment_amount": 200000,
+  "timeframe": "long term"
+}
+
+{
+    "answer": "Your portfolio is currently experiencing a mixed trend. INFY.NS is in a neutral zone, while TCS.NS, HDFCBANK.NS, and RELIANCE.NS are in oversold conditions, which may indicate potential bounces.",
+    "entry_price": "1240-1300 for INFY.NS, 2400-2500 for TCS.NS, 750-800 for HDFCBANK.NS, and 1300-1400 for RELIANCE.NS",
+    "target_price": "1350 for INFY.NS, 2600 for TCS.NS, 820 for HDFCBANK.NS, and 1450 for RELIANCE.NS",
+    "stop_loss": "1200 for INFY.NS, 2300 for TCS.NS, 720 for HDFCBANK.NS, and 1280 for RELIANCE.NS",
+    "rsi_value": "INFY.NS: 58.05430695749804, TCS.NS: 26.932163275056634, HDFCBANK.NS: 24.351110884143544, RELIANCE.NS: 29.70190671200046",
+    "rsi_explanation": "Mixed RSI signals across your portfolio holdings.",
+    "sources_used": [
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=15:42 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=15:42 IST",
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=15:42 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=15:42 IST"
+    ],
+    "timestamp": "2026-03-28 15:43:01 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+Test 3 — Weak / ambiguous stock
+{
+  "question": "Should I buy Adani?",
+  "portfolio": [],
+  "investment_amount": 50000,
+  "timeframe": "long term"
+}
+
+
+{
+    "answer": "Consider buying ADANIENSOL.NS given its current RSI value of 34.88, which is in a neutral zone, but be aware of the concentration risk as it makes up 100% of your portfolio.",
+    "entry_price": "950-970",
+    "target_price": "1050",
+    "stop_loss": "920",
+    "rsi_value": 34.87787594317657,
+    "rsi_explanation": "RSI is 34.88, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "ADANIENSOL.NS: current price=956.00, RSI=34.88, fetched_at=15:43 IST"
+    ],
+    "timestamp": "2026-03-28 15:43:38 IST",
+    "concentration_warning": "ADANIENSOL makes up 100% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+in this case no 3 i have doubt as froentend not response anything it take highest priority one am i correct? 

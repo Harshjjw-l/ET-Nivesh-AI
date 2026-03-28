@@ -1,0 +1,146 @@
+{"question": "Should I buy Tata Motors?",
+"portfolio": ["TATAMOTORS"], 
+"investment_amount": 50000, "timeframe": "short term"}
+
+{
+    "answer": "Tata Motors can be considered for a short-term buy, but be cautious of the equal-weight concentration risk.",
+    "entry_price": "420-440",
+    "target_price": "460-480",
+    "stop_loss": "400",
+    "rsi_value": "Not available",
+    "rsi_explanation": "Relative Strength Index (RSI) is a measure of stock's recent price changes to determine overbought or oversold conditions. Unfortunately, the RSI value is not available for Tata Motors.",
+    "sources_used": [],
+    "timestamp": "2026-03-28 16:10:47 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+{"question": "Is HDFC Bank safe for elderly investor?",
+"portfolio": ["HDFCBANK", "SBIN"],
+"investment_amount": 30000, "timeframe": "long term"}
+
+
+{
+    "answer": "HDFC Bank can be a relatively safe option for elderly investors due to its stable performance and low volatility. However, it's essential to consider the current market conditions and the overall portfolio diversification. Given the RSI value of 24.35, which indicates an 'oversold' condition, it may be a good time to buy. Other stocks like SBIN are also available, but SBIN makes up 50% of your portfolio, so buying more of it may increase your risk.",
+    "entry_price": "740-760",
+    "target_price": "820-840",
+    "stop_loss": "700",
+    "rsi_value": 24.35,
+    "rsi_explanation": "RSI is 24.35, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "SBIN.NS: current price=1019.50, RSI=23.64, fetched_at=16:11 IST",
+        "HDFCBANK.NS: current price=756.20, RSI=24.35, fetched_at=16:11 IST"
+    ],
+    "timestamp": "2026-03-28 16:11:29 IST",
+    "concentration_warning": "SBIN makes up 50% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+{"question": "Which stock is weakest in my portfolio?",
+"portfolio": ["TCS", "WIPRO", "INFY", "TECHM"],
+"investment_amount": 100000, "timeframe": "long term"}
+
+
+{
+    "answer": "TCS.NS is the weakest stock in your portfolio, given its low RSI value of 26.93, which is often seen as 'oversold'. Other stocks like INFY.NS, TECHM.NS, and WIPRO.NS have RSI values in the neutral zone.",
+    "entry_price": "2380-2420",
+    "target_price": "2520-2580",
+    "stop_loss": "2280-2320",
+    "rsi_value": 26.93,
+    "rsi_explanation": "RSI is 26.93, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=16:12 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=16:12 IST",
+        "TECHM.NS: current price=1391.60, RSI=53.02, fetched_at=16:12 IST",
+        "WIPRO.NS: current price=191.60, RSI=41.23, fetched_at=16:12 IST"
+    ],
+    "timestamp": "2026-03-28 16:12:09 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+{"question": "I have 5000 rupees only. What should I buy?",
+"portfolio": [],
+"investment_amount": 5000, "timeframe": "long term"}
+
+{
+    "answer": "Since no specific tickers were mentioned, I'll suggest a general approach for a long-term investment with 5000 rupees. Consider investing in a diversified portfolio, but if you're looking for a single stock, you might want to explore well-established companies like Infosys, Tata Motors, or HDFC Bank. However, without specific ticker information, it's challenging to provide a precise recommendation.",
+    "entry_price": "0.0 - 500.0",
+    "target_price": "500.0 - 1000.0",
+    "stop_loss": "0.0 - 200.0",
+    "rsi_value": "Not available",
+    "rsi_explanation": "Relative Strength Index (RSI) is a measure of how quickly the stock price is changing. It helps identify if a stock is overbought or oversold. Without specific ticker data, we cannot provide an RSI value.",
+    "sources_used": [],
+    "timestamp": "2026-03-28 16:12:44 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+{"question": "Should I exit Wipro now?",
+"portfolio": ["WIPRO", "TCS"],
+"investment_amount": 80000, "timeframe": "short term"}
+
+{
+    "answer": "Consider holding Wipro for now, given its neutral RSI value. However, keep an eye on TCS, which makes up 50% of your portfolio and has an oversold RSI value.",
+    "entry_price": "190-195",
+    "target_price": "205",
+    "stop_loss": "185",
+    "rsi_value": 41.23,
+    "rsi_explanation": "RSI is 41.23, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=16:13 IST",
+        "WIPRO.NS: current price=191.60, RSI=41.23, fetched_at=16:13 IST"
+    ],
+    "timestamp": "2026-03-28 16:13:42 IST",
+    "concentration_warning": "TCS makes up 50% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+{"question": "Compare Reliance and TCS for long term",
+"portfolio": ["RELIANCE", "TCS"],
+"investment_amount": 150000, "timeframe": "long term"}
+
+{
+    "answer": "Both TCS and Reliance are oversold with RSI values of 26.93 and 29.70 respectively. For a long-term investment, consider Reliance as it has shown more stability in the last 20 days. However, please note that TCS makes up 50% of your portfolio, and buying more increases your risk if this stock falls.",
+    "entry_price": "2300-2400",
+    "target_price": "2600-2700",
+    "stop_loss": "2100-2200",
+    "rsi_value": 26.93,
+    "rsi_explanation": "RSI is 26.93, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=16:14 IST",
+        "RELIANCE.NS: current price=1348.10, RSI=29.70, fetched_at=16:14 IST"
+    ],
+    "timestamp": "2026-03-28 16:14:23 IST",
+    "concentration_warning": "TCS makes up 50% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+{"question": "My portfolio has only IT stocks am I at risk?",
+"portfolio": ["TCS", "INFY", "WIPRO", "TECHM"],
+"investment_amount": 200000, "timeframe": "long term"}
+
+{
+    "answer": "Your portfolio is heavily concentrated in IT stocks, which may pose a risk. Consider diversifying across sectors for a more balanced portfolio.",
+    "entry_price": "1240-1300",
+    "target_price": "1400-1450",
+    "stop_loss": "1150-1200",
+    "rsi_value": 58.05430695749804,
+    "rsi_explanation": "RSI is 58.05, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "INFY.NS: current price=1269.70, RSI=58.05, fetched_at=16:14 IST",
+        "TCS.NS: current price=2389.80, RSI=26.93, fetched_at=16:14 IST",
+        "TECHM.NS: current price=1391.60, RSI=53.02, fetched_at=16:14 IST",
+        "WIPRO.NS: current price=191.60, RSI=41.23, fetched_at=16:14 IST"
+    ],
+    "timestamp": "2026-03-28 16:14:58 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}

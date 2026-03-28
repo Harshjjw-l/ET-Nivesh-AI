@@ -1,0 +1,423 @@
+TEST_CASES
+
+
+TEST 1) 
+
+{
+  "question": "Should I buy ICICI Bank for 1 year?",
+  "portfolio": ["BEL", "TCS", "INFY"],
+  "investment_amount": 100000,
+  "timeframe": "1 year"
+}
+
+{
+    "answer": "ICICI Bank can be considered for a 1-year investment, given its current RSI value of 40.68, which is in a neutral zone. Other stocks in your portfolio, such as TCS, BEL, and INFY, also have neutral RSI values.",
+    "entry_price": "1220-1250",
+    "target_price": "1400-1450",
+    "stop_loss": "1150",
+    "rsi_value": 40.68,
+    "rsi_explanation": "RSI is 40.68, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "ICICIBANK.NS: current price=1259.70, RSI=40.68, fetched_at=01:05 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:05 IST",
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:05 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:05 IST"
+    ],
+    "timestamp": "2026-03-28 01:05:22 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+
+
+
+test 2)
+
+{
+  "question": "Is Sun Pharma a good buy now?",
+  "portfolio": ["HDFCBANK", "TITAN", "WIPRO"],
+  "investment_amount": 150000,
+  "timeframe": "6 months"
+}
+before update
+{
+    "answer": "Sun Pharma is not in your portfolio, but based on the RSI of the stocks you have, HDFCBANK.NS is oversold and might be a good buy now. Other stocks like WIPRO.NS, TITAN.NS, and BLISSGVS.NS are in neutral zones.",
+    "entry_price": "750-800",
+    "target_price": "900-950",
+    "stop_loss": "680-720",
+    "rsi_value": 28.30761782239307,
+    "rsi_explanation": "RSI is 28.31, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:06 IST",
+        "BLISSGVS.NS: current price=224.08, RSI=53.56, fetched_at=01:06 IST",
+        "WIPRO.NS: current price=189.05, RSI=31.38, fetched_at=01:06 IST",
+        "TITAN.NS: current price=4039.30, RSI=46.52, fetched_at=01:06 IST"
+    ],
+    "timestamp": "2026-03-28 01:06:38 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+after update
+{
+    "answer": "Sun Pharma is not in your portfolio, but based on the data provided for your existing stocks, WIPRO.NS seems like a potential buy with an RSI value of 31.38, indicating a neutral zone. However, HDFCBANK.NS with an RSI of 28.31 might be considered 'oversold' and could be due for a bounce.",
+    "entry_price": "185-192",
+    "target_price": "205",
+    "stop_loss": "175",
+    "rsi_value": 31.3788853913209,
+    "rsi_explanation": "RSI is 31.38, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "TITAN.NS: current price=4039.30, RSI=46.52, fetched_at=01:54 IST",
+        "WIPRO.NS: current price=189.05, RSI=31.38, fetched_at=01:54 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:54 IST"
+    ],
+    "timestamp": "2026-03-28 01:54:24 IST",
+    "concentration_warning": "TITAN makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+TEST 3)
+
+{
+  "question": "Should I enter Tata Motors at current level?",
+  "portfolio": ["SBIN", "BEL", "TCS"],
+  "investment_amount": 80000,
+  "timeframe": "1 year"
+}
+
+{
+    "answer": "Tata Motors (TMCV.NS) can be considered for entry at the current level, given its neutral RSI value and recent price movement. Other stocks in your portfolio, such as SBIN.NS, BEL.NS, and TCS.NS, are also in neutral zones based on their RSI values.",
+    "entry_price": "420-435",
+    "target_price": "460-480",
+    "stop_loss": "400",
+    "rsi_value": 55.28,
+    "rsi_explanation": "RSI is 55.28, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "SBIN.NS: current price=1060.60, RSI=44.60, fetched_at=01:07 IST",
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:07 IST",
+        "TMCV.NS: current price=431.85, RSI=55.28, fetched_at=01:07 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:07 IST"
+    ],
+    "timestamp": "2026-03-28 01:07:32 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+after modification
+
+{
+    "answer": "Tata Motors is not in your portfolio, but considering the neutral RSI zone of your existing stocks, you may want to diversify. However, since you asked about Tata Motors, let's focus on a similar stock, SBIN.NS, which has a relatively stable RSI value.",
+    "entry_price": "1050 - 1070",
+    "target_price": "1120",
+    "stop_loss": "1010",
+    "rsi_value": 44.6,
+    "rsi_explanation": "RSI is 44.60, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:55 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:55 IST",
+        "SBIN.NS: current price=1060.60, RSI=44.60, fetched_at=01:55 IST"
+    ],
+    "timestamp": "2026-03-28 01:55:54 IST",
+    "concentration_warning": "BEL makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+
+test 4)
+{
+  "question": "What about NTPC for long term?",
+  "portfolio": ["ONGC", "POWERGRID", "RELIANCE"],
+  "investment_amount": 200000,
+  "timeframe": "2 years"
+}
+
+{
+    "answer": "NTPC is a good long-term bet, given its stable performance and the fact that it's in a neutral RSI zone. Other stocks like POWERGRID, RELIANCE, and ONGC are also part of your portfolio, with POWERGRID being oversold and RELIANCE and ONGC in neutral zones.",
+    "entry_price": "370-380",
+    "target_price": "420-430",
+    "stop_loss": "350",
+    "rsi_value": 39.95,
+    "rsi_explanation": "RSI is 39.95, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "POWERGRID.NS: current price=295.00, RSI=27.83, fetched_at=01:08 IST",
+        "RELIANCE.NS: current price=1413.10, RSI=62.68, fetched_at=01:08 IST",
+        "ONGC.NS: current price=270.20, RSI=60.51, fetched_at=01:08 IST",
+        "NTPC.NS: current price=378.40, RSI=39.95, fetched_at=01:08 IST"
+    ],
+    "timestamp": "2026-03-28 01:08:22 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+test 5)
+
+{
+  "question": "Should I buy Infosys now?",
+  "portfolio": ["TCS", "WIPRO", "HCLTECH"],
+  "investment_amount": 120000,
+  "timeframe": "6 months"
+}
+
+{
+    "answer": "Based on the provided data, Infosys is not directly mentioned, but we can consider its peers like TCS, WIPRO, and HCLTECH. Given the neutral RSI values for most of these stocks, it might be a good time to buy, but consider diversifying your portfolio.",
+    "entry_price": "1350-1400",
+    "target_price": "1450-1500",
+    "stop_loss": "1300",
+    "rsi_value": 52.19335746098761,
+    "rsi_explanation": "RSI is 52.19, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "HCLTECH.NS: current price=1381.30, RSI=52.19, fetched_at=01:09 IST",
+        "HCL-INSYS.NS: current price=10.82, RSI=11.77, fetched_at=01:09 IST",
+        "WIPRO.NS: current price=189.05, RSI=31.38, fetched_at=01:09 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:09 IST"
+    ],
+    "timestamp": "2026-03-28 01:09:46 IST",
+    "concentration_warning": null,
+
+after modification
+
+{
+    "answer": "Based on the provided data, Infosys is not in your portfolio, but we can discuss the prospects of buying it. Considering the RSI values of the stocks in your portfolio, WIPRO.NS has an RSI of 31.38, which is relatively low, indicating a potential buying opportunity. However, it's essential to consider other factors such as the company's financial health and market trends.",
+    "entry_price": "185-195",
+    "target_price": "205-210",
+    "stop_loss": "175",
+    "rsi_value": 31.38,
+    "rsi_explanation": "RSI is 31.38, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "HCLTECH.NS: current price=1381.30, RSI=52.19, fetched_at=01:56 IST",
+        "WIPRO.NS: current price=189.05, RSI=31.38, fetched_at=01:56 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:56 IST",
+        "HCL-INSYS.NS: current price=10.82, RSI=11.77, fetched_at=01:56 IST"
+    ],
+    "timestamp": "2026-03-28 01:56:56 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+   
+test 6)
+
+{
+  "question": "Should I buy SBIN now?",
+  "portfolio": ["BEL", "TCS", "INFY"],
+  "investment_amount": 70000,
+  "timeframe": "1 year"
+}
+
+{
+    "answer": "Consider buying SBIN if it reaches the range of 450-460, with a target price of 500 and a stop loss at 420.",
+    "entry_price": "450-460",
+    "target_price": "500",
+    "stop_loss": "420",
+    "rsi_value": "Not available for SBIN, but other stocks in your portfolio have neutral RSI values (TCS: 41.38, BEL: 53.37, INFY: 50.37)",
+    "rsi_explanation": "RSI values for your existing stocks are in a neutral zone, indicating no strong buy or sell signals.",
+    "sources_used": [
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:10 IST",
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:10 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:10 IST"
+    ],
+    "timestamp": "2026-03-28 01:10:42 IST",
+    "concentration_warning": "TCS makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+after update
+
+{
+    "answer": "Consider buying SBIN, but first, let's look at your current portfolio. Since SBIN is not in your portfolio, we'll focus on that. However, we do see that BEL, TCS, and INFY are in your portfolio, with BEL making up 33% of it, which is a concentration risk.",
+    "entry_price": "550-570",
+    "target_price": "620-640",
+    "stop_loss": "500-520",
+    "rsi_value": "Not available for SBIN, but for your current stocks: BEL.NS is 53.37, TCS.NS is 41.38, INFY.NS is 50.37",
+    "rsi_explanation": "RSI values for your current stocks are in neutral zones, but we couldn't find RSI for SBIN. Generally, RSI helps determine if a stock is overbought or oversold.",
+    "sources_used": [
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:57 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:57 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:57 IST"
+    ],
+    "timestamp": "2026-03-28 01:57:52 IST",
+    "concentration_warning": "BEL makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 7)
+{
+  "question": "Bro what do you think about Reliance if market falls?",
+  "portfolio": ["BEL", "TCS", "HDFCBANK"],
+  "investment_amount": 100000,
+  "timeframe": "1 year"
+}
+
+{
+    "answer": "Reliance is not in your portfolio, but if the market falls, consider buying HDFCBANK.NS, which is in your portfolio and has an RSI of 28.31, indicating it's oversold. Other stocks in your portfolio, like TCS.NS, BEL.NS, are in a neutral zone.",
+    "entry_price": "770-785",
+    "target_price": "820-835",
+    "stop_loss": "750",
+    "rsi_value": 28.31,
+    "rsi_explanation": "RSI is 28.31, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:11 IST",
+        "MUFTI.NS: current price=70.95, RSI=35.81, fetched_at=01:11 IST",
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:11 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:11 IST"
+    ],
+    "timestamp": "2026-03-28 01:11:27 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+after update
+
+{
+    "answer": "Considering the market fall, Reliance might be a good option, but since it's not in your portfolio, let's focus on your existing stocks. Among them, HDFCBANK.NS seems promising as its RSI is 28.31, indicating it's oversold and might bounce back.",
+    "entry_price": "770-780",
+    "target_price": "820-830",
+    "stop_loss": "740",
+    "rsi_value": 28.31,
+    "rsi_explanation": "RSI is 28.31, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:58 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:58 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:58 IST"
+    ],
+    "timestamp": "2026-03-28 01:58:33 IST",
+    "concentration_warning": "BEL makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+
+test 8)
+{
+  "question": "What about Maruti?",
+  "portfolio": ["TITAN", "ASIANPAINT", "HDFCBANK"],
+  "investment_amount": 90000,
+  "timeframe": "1 year"
+}
+
+
+{
+    "answer": "Maruti is not in your portfolio, but let's focus on the stocks you have. Considering the RSI values, HDFCBANK.NS seems to be in an oversold position, which might be a good opportunity to buy. However, please note that ASIANPAINT makes up 33% of your portfolio, and buying more would increase your risk.",
+    "entry_price": "780-800",
+    "target_price": "850",
+    "stop_loss": "750",
+    "rsi_value": 28.31,
+    "rsi_explanation": "RSI is 28.31, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "ASIANPAINT.NS: current price=2270.20, RSI=41.97, fetched_at=01:11 IST",
+        "TITAN.NS: current price=4039.30, RSI=46.52, fetched_at=01:11 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:11 IST"
+    ],
+    "timestamp": "2026-03-28 01:12:02 IST",
+    "concentration_warning": "ASIANPAINT makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+aftr update 
+
+{
+    "answer": "Maruti's price has been fluctuating, with an RSI of 42.85, indicating a neutral zone. Considering the overall market and your existing portfolio, which includes TITAN, ASIANPAINT, and HDFCBANK, Maruti could be a potential addition. However, please note that HDFCBANK's RSI is 28.31, suggesting it might be oversold and due for a bounce. ASIANPAINT and TITAN are in a neutral zone like Maruti.",
+    "entry_price": "12500-13000",
+    "target_price": "14000",
+    "stop_loss": "12000",
+    "rsi_value": 42.85,
+    "rsi_explanation": "RSI is 42.85, which is in a neutral zone — neither strongly overheated nor deeply beaten down.",
+    "sources_used": [
+        "TITAN.NS: current price=4039.30, RSI=46.52, fetched_at=01:59 IST",
+        "ASIANPAINT.NS: current price=2270.20, RSI=41.97, fetched_at=01:59 IST",
+        "MARUTI.NS: current price=12711.00, RSI=42.85, fetched_at=01:59 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:59 IST"
+    ],
+    "timestamp": "2026-03-28 01:59:19 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 9)
+{
+  "question": "If market crashes badly in next few months, should I consider buying Bajaj Finance for long term wealth creation?",
+  "portfolio": ["TCS", "INFY", "HDFCBANK"],
+  "investment_amount": 250000,
+  "timeframe": "2 years"
+}
+
+
+{
+    "answer": "Considering Bajaj Finance for long-term wealth creation is a good idea, especially given its current 'oversold' RSI value of 25.45. Other stocks in your portfolio like HDFCBANK, TCS, and INFY are also worth monitoring, but BAJAJHFL.NS seems more attractive at this point due to its potential for a bounce.",
+    "entry_price": "78-80",
+    "target_price": "90-100",
+    "stop_loss": "70",
+    "rsi_value": 25.45,
+    "rsi_explanation": "RSI is 25.45, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:12 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:12 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:12 IST",
+        "BAJAJHFL.NS: current price=79.13, RSI=25.45, fetched_at=01:12 IST"
+    ],
+    "timestamp": "2026-03-28 01:12:45 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+{
+    "answer": "Considering Bajaj Finance for long-term wealth creation is a good idea, but given the current market conditions and your existing portfolio, it's essential to diversify. Bajaj Finance is not in your current portfolio, which is a good opportunity to reduce concentration risk. Your current portfolio has TCS, INFY, and HDFCBANK, with TCS making up 33% of your portfolio, which is a concentration risk.",
+    "entry_price": "6500-7000",
+    "target_price": "8500-9000",
+    "stop_loss": "5800",
+    "rsi_value": "41.37715018599445 for TCS, 50.370083128164566 for INFY, and 28.30761782239307 for HDFCBANK",
+    "rsi_explanation": "RSI values indicate neutral to oversold conditions for your current holdings. For Bajaj Finance, we would need the RSI data, but generally, an RSI below 30 is considered oversold, and above 70 is considered overbought.",
+    "sources_used": [
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:59 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:59 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:59 IST"
+    ],
+    "timestamp": "2026-03-28 02:00:00 IST",
+    "concentration_warning": "TCS makes up 33% of your portfolio. Buying more increases your risk if this stock falls. Consider diversifying.",
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+
+test 10)
+{
+  "question": "How is my portfolio doing overall?",
+  "portfolio": ["BEL", "HDFCBANK", "TCS", "INFY"],
+  "investment_amount": 100000,
+  "timeframe": "1 year"
+}
+
+
+{
+    "answer": "Your portfolio is currently experiencing a mix of trends. BEL and TCS are in a neutral zone, while INFY is also neutral. HDFCBANK and 5PAISA are oversold, which may indicate a potential bounce.",
+    "entry_price": "Consider entry points for HDFCBANK around 750-780 and for 5PAISA around 260-280",
+    "target_price": "Target prices could be 820 for HDFCBANK and 300 for 5PAISA",
+    "stop_loss": "Stop loss levels could be 700 for HDFCBANK and 240 for 5PAISA",
+    "rsi_value": "RSI values are 28.31 for HDFCBANK, 19.99 for 5PAISA, 53.37 for BEL, 41.38 for TCS, and 50.37 for INFY",
+    "rsi_explanation": "HDFCBANK and 5PAISA are oversold, while BEL, TCS, and INFY are in neutral zones",
+    "sources_used": [
+        "5PAISA.NS: current price=274.90, RSI=19.99, fetched_at=01:13 IST",
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=01:13 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=01:13 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=01:13 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=01:13 IST"
+    ],
+    "timestamp": "2026-03-28 01:13:22 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
+{
+    "answer": "Your portfolio is currently experiencing a mixed trend. BEL and INFY are showing neutral RSI values, while TCS is also neutral. However, HDFCBANK's RSI is indicating an oversold condition, which might lead to a bounce. Other stocks like TCS and INFY are also part of your portfolio but their trends are neutral.",
+    "entry_price": "405-415 for HDFCBANK, as it's the most oversold",
+    "target_price": "820-850 for HDFCBANK, considering its historical highs",
+    "stop_loss": "740 for HDFCBANK, to limit potential losses",
+    "rsi_value": "28.31 for HDFCBANK, indicating an oversold condition",
+    "rsi_explanation": "RSI is 28.31, which is often seen as 'oversold' — meaning the price has fallen quickly and may bounce.",
+    "sources_used": [
+        "BEL.NS: current price=413.45, RSI=53.37, fetched_at=02:00 IST",
+        "TCS.NS: current price=2377.40, RSI=41.38, fetched_at=02:00 IST",
+        "INFY.NS: current price=1279.10, RSI=50.37, fetched_at=02:00 IST",
+        "HDFCBANK.NS: current price=782.30, RSI=28.31, fetched_at=02:00 IST"
+    ],
+    "timestamp": "2026-03-28 02:00:29 IST",
+    "concentration_warning": null,
+    "bulk_deals": "No bulk deal activity today for your stocks"
+}
