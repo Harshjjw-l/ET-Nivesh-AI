@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { BulkDeal, ChatMessage, Portfolio, Timeframe } from './types'
-import { getTodaySignals, postChat } from './api'
+import type { BulkDeal, ChatMessage, Portfolio, Timeframe, StockSuggestion } from './types'
+import { getTodaySignals, postChat, searchStock } from './api'
 
 function nowIso() {
   return new Date().toISOString()
@@ -84,7 +84,8 @@ export default function App() {
   const [todaySignals, setTodaySignals] = useState<BulkDeal[]>([])
   const [signalsError, setSignalsError] = useState<string | null>(null)
   const abortRef = useRef<AbortController | null>(null)
-
+  const [suggestions, setSuggestions] = useState<Record<number, StockSuggestion[]>>({})
+  const searchAbortRef = useRef<AbortController | null>(null)
   useEffect(() => {
     const controller = new AbortController()
     getTodaySignals(controller.signal)
@@ -96,9 +97,28 @@ export default function App() {
         const msg = e instanceof Error ? e.message : 'Failed to load today signals'
         setSignalsError(msg)
       })
+      
     return () => controller.abort()
   }, [])
-
+  async function handleTickerSearch(value: string, index: number) {
+    const cleaned = value.trim()
+  
+    if (!cleaned) {
+      setSuggestions((prev) => ({ ...prev, [index]: [] }))
+      return
+    }
+  
+    searchAbortRef.current?.abort()
+    const controller = new AbortController()
+    searchAbortRef.current = controller
+  
+    try {
+      const results = await searchStock(cleaned, controller.signal)
+      setSuggestions((prev) => ({ ...prev, [index]: results }))
+    } catch {
+      setSuggestions((prev) => ({ ...prev, [index]: [] }))
+    }
+  }
   async function onSend() {
     const q = question.trim()
     if (!q || isSending) return
@@ -181,7 +201,12 @@ export default function App() {
       setIsSending(false)
     }
   }
-
+  const quickQuestions = [
+    "Should I buy these stocks?",
+    "How is my portfolio doing overall?",
+    "Any risk in my portfolio?",
+    "What are best entry levels?",
+  ]
   return (
     <div className="min-h-screen bg-slate-950 text-white">
     <div className="mx-auto grid min-h-screen max-w-[1600px] grid-cols-1 md:grid-cols-[340px_1fr]">
@@ -202,19 +227,41 @@ export default function App() {
             <div className="mb-4">
               <label className="mb-2 block text-xs text-white/70">Stock tickers (up to 5)</label>
               <div className="grid grid-cols-1 gap-2">
-                {tickerInputs.map((v, i) => (
-                  <input
-                    key={i}
-                    className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2.5 text-sm text-white outline-none transition focus:border-orange-400/70 focus:ring-2 focus:ring-orange-400/30"
-                    value={v}
-                    placeholder={i === 0 ? 'e.g. RELIANCE' : 'optional'}
-                    onChange={(e) => {
-                      const next = tickerInputs.slice()
-                      next[i] = e.target.value
-                      setTickerInputs(next)
-                    }}
-                  />
-                ))}
+              {tickerInputs.map((v, i) => (
+  <div key={i} className="space-y-2">
+    <input
+      className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2.5 text-sm text-white outline-none transition focus:border-orange-400/70 focus:ring-2 focus:ring-orange-400/30"
+      value={v}
+      placeholder={i === 0 ? 'e.g. RELIANCE' : 'optional'}
+      onChange={(e) => {
+        const next = tickerInputs.slice()
+        next[i] = e.target.value
+        setTickerInputs(next)
+        handleTickerSearch(e.target.value, i)
+      }}
+    />
+
+    {suggestions[i] && suggestions[i].length > 0 && v.trim() ? (
+      <div className="flex flex-wrap gap-2">
+        {suggestions[i].map((s, idx) => (
+          <button
+            key={`${s.symbol}-${idx}`}
+            type="button"
+            className="rounded-full border border-orange-400/30 bg-orange-500/10 px-3 py-1 text-xs text-orange-100 hover:bg-orange-500/20"
+            onClick={() => {
+              const next = tickerInputs.slice()
+              next[i] = s.symbol
+              setTickerInputs(next)
+              setSuggestions((prev) => ({ ...prev, [i]: [] }))
+            }}
+          >
+            {s.symbol} - {s.company_name}
+          </button>
+        ))}
+      </div>
+    ) : null}
+  </div>
+))}
               </div>
               <div className="mt-2 text-xs text-white/65">
                 Active:{' '}
@@ -274,16 +321,46 @@ export default function App() {
             <div className="mt-3 text-xs leading-5 text-white/65">
               Tip: ask for allocation, risk, entry levels, or "what changed today?" based on your timeframe.
             </div>
+            <button
+  className="mt-4 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-white/80 hover:bg-white/10"
+  onClick={() => {
+    setTickerInputs(['', '', '', '', ''])
+    setAmountInr('')
+    setTimeframe('short_term')
+  }}
+>
+  Reset Portfolio
+</button>
           </div>
         </aside>
 
         <main className="flex min-h-0 flex-col">
-          <header className="flex flex-col gap-2 border-b border-white/10 bg-black/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <div className="font-semibold">Chat</div>
-            <div className="text-xs text-white/70">
-              API: <span className="font-mono">POST localhost:8000/chat</span>
-            </div>
-          </header>
+        <header className="flex flex-col gap-2 border-b border-white/10 bg-black/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+  <div className="font-semibold">Chat</div>
+
+  <div className="flex items-center gap-2">
+    <button
+      className="rounded-lg border border-white/15 px-3 py-1 text-xs text-white/80 hover:bg-white/10"
+      onClick={() =>
+        setMessages([
+          {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content:
+              'Hi — I’m ET Nivesh AI. Add your portfolio in the left panel, then ask a question like “How should I allocate across these for a 3-month view?”',
+            sources: [{ timestamp: nowIso(), dataUsed: 'No external data (welcome message)' }],
+          },
+        ])
+      }
+    >
+      Clear Chat
+    </button>
+
+    <div className="text-xs text-white/70">
+      API: <span className="font-mono">POST localhost:8000/chat</span>
+    </div>
+  </div>
+</header>
 
           <section className="grid min-h-0 flex-1 grid-rows-[auto_1fr_auto]">
             <div className="px-4 pt-3 sm:px-5">
@@ -299,9 +376,12 @@ export default function App() {
                     </div>
                   ))}
                 </div>
-              ) : (
-                <div className="text-xs text-white/65">No bulk deals available for today.</div>
-              )}
+              
+) : (
+  <div className="rounded-xl border border-white/15 bg-white/5 p-3 text-xs text-white/75">
+    No strong bulk deal signals found today. Check again during market hours.
+  </div>
+)}
             </div>
 
             <div className="overflow-y-auto px-4 py-4 sm:px-5" role="log" aria-label="Chat messages">
@@ -316,31 +396,46 @@ export default function App() {
                           : 'border-white/15 bg-white/10'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap break-words">{m.content}</div>
+                      {m.role === 'assistant' && (m.budget_note || m.concentration_warning) ? (
+  <div className="mt-4 text-xs font-semibold uppercase tracking-wide text-white/60">
+    Portfolio & Capital Check
+  </div>
+) : null}
+{m.role === 'assistant' && m.concentration_warning ? (
+  <div className="mt-3 rounded-xl border border-orange-400/30 bg-orange-500/10 p-3 text-xs text-white/85">
+    <div className="mb-1 font-semibold text-white/90">Risk Warning</div>
+    <div>{m.concentration_warning}</div>
+  </div>
+) : null}
+
+                    <div className="whitespace-pre-wrap break-words text-sm leading-7 text-white/95">
+                      {m.content}
+                    </div>
+                     
                       {m.role === 'assistant' && (
-                        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                           {m.entry_price && (
-                            <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3">
-                             <div className="text-xs text-white/65">Entry Price</div>
-                             <div className="mt-1 text-sm font-semibold text-white">{m.entry_price}</div>
-                            </div>
-                       )}
+  <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+    {m.entry_price && (
+      <div className="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 p-4 shadow-sm">
+        <div className="text-xs uppercase tracking-wide text-emerald-200/80">Entry Price</div>
+        <div className="mt-2 text-lg font-bold text-white">{m.entry_price}</div>
+      </div>
+    )}
 
-                            {m.target_price && (
-                             <div className="rounded-xl border border-blue-400/30 bg-blue-500/10 p-3">
-                              <div className="text-xs text-white/65">Target Price</div>
-                              <div className="mt-1 text-sm font-semibold text-white">{m.target_price}</div>
-                             </div>
-                        )}
+    {m.target_price && (
+      <div className="rounded-2xl border border-blue-400/30 bg-blue-500/10 p-4 shadow-sm">
+        <div className="text-xs uppercase tracking-wide text-blue-200/80">Target Price</div>
+        <div className="mt-2 text-lg font-bold text-white">₹{m.target_price}</div>
+      </div>
+    )}
 
-                             {m.stop_loss && (
-                              <div className="rounded-xl border border-red-400/30 bg-red-500/10 p-3">
-                               <div className="text-xs text-white/65">Stop Loss</div>
-                               <div className="mt-1 text-sm font-semibold text-white">{m.stop_loss}</div>
-                              </div>
-                        )}
-                      </div>
-                    )}
+    {m.stop_loss && (
+      <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 shadow-sm">
+        <div className="text-xs uppercase tracking-wide text-red-200/80">Stop Loss</div>
+        <div className="mt-2 text-lg font-bold text-white">₹{m.stop_loss}</div>
+      </div>
+    )}
+  </div>
+)}
                     {m.role === 'assistant' && m.rsi_explanation ? (
                      <div className="mt-3 rounded-xl border border-yellow-400/30 bg-yellow-500/10 p-3 text-xs text-white/85">
                         <div className="mb-1 font-semibold text-white/90">RSI Explanation</div>
@@ -391,8 +486,27 @@ export default function App() {
                   </div>
                 )
               })}
+              {isSending && (
+  <div className="mb-4 flex flex-col gap-2 items-start">
+    <div className="w-full max-w-3xl rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm leading-6 shadow-lg">
+      Thinking...
+    </div>
+  </div>
+)}  
             </div>
-
+            <div className="mb-2 flex flex-wrap gap-2">
+  {quickQuestions.map((q, i) => (
+    <button
+      key={i}
+      className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80 hover:bg-white/10"
+      onClick={() => {
+        setQuestion(q)
+      }}
+    >
+      {q}
+    </button>
+  ))}
+</div>
             <div className="border-t border-white/10 bg-black/20 px-4 py-3 sm:px-5">
               {error ? (
                 <div className="mb-2 rounded-xl border border-orange-400/40 bg-orange-500/15 px-3 py-2 text-xs text-orange-50">
@@ -411,7 +525,8 @@ export default function App() {
                 />
                 <button
                   className="h-11 rounded-xl border border-orange-400/50 bg-gradient-to-br from-orange-500 to-orange-400 px-4 font-semibold text-black disabled:cursor-not-allowed disabled:opacity-60"
-                  onClick={onSend}
+                  onClick={onclick}
+
                   disabled={isSending || !question.trim()}
                 >
                   {isSending ? 'Sending...' : 'Send'}

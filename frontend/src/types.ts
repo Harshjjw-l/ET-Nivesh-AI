@@ -50,3 +50,7 @@ export type BulkDeal = {
   dealDate?: string
   [key: string]: unknown
 }
+export type StockSuggestion = {
+  symbol: string
+  company_name: string
+}

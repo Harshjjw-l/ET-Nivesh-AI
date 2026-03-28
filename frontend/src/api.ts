@@ -56,3 +56,17 @@ export async function getTodaySignals(signal?: AbortSignal) {
     deals: Array.isArray(data.deals) ? data.deals : [],
   }
 }
+export async function searchStock(query: string, signal?: AbortSignal) {
+  const res = await fetch(`${API_BASE}/search-stock?q=${encodeURIComponent(query)}`, {
+    method: 'GET',
+    signal,
+  })
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`Search stock failed (${res.status}): ${text || res.statusText}`)
+  }
+
+  const data = await res.json()
+  return Array.isArray(data.results) ? data.results : []
+}
