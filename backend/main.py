@@ -26,7 +26,88 @@ except Exception:  # pragma: no cover
 
 
 app = FastAPI(title="ET Nivesh AI")
+# ── INPUT NORMALIZATION / ALIAS HELPERS ──────────────────────────
+def _normalize_ticker(raw: str) -> Optional[str]:
+    t = (raw or "").strip().upper()
+    if not t:
+        return None
+    t = re.sub(r"[^A-Z0-9\.]", "", t)
+    if not t:
+        return None
+    if t.endswith(".NS"):
+        base = t[:-3]
+        if base and re.fullmatch(r"[A-Z0-9]{1,15}", base):
+            return t
+        return None
+    if re.fullmatch(r"[A-Z0-9]{1,15}", t):
+        return f"{t}.NS"
+    return None
 
+
+_NAME_TO_NSE_TICKER: Dict[str, str] = {
+    "RELIANCE": "RELIANCE.NS",
+    "RELIANCE INDUSTRIES": "RELIANCE.NS",
+    "TATA CONSULTANCY SERVICES": "TCS.NS",
+    "TCS": "TCS.NS",
+    "INFOSYS": "INFY.NS",
+    "INFY": "INFY.NS",
+    "HDFC BANK": "HDFCBANK.NS",
+    "HDFCBANK": "HDFCBANK.NS",
+    "STATE BANK OF INDIA": "SBIN.NS",
+    "SBI": "SBIN.NS",
+    "SBIN": "SBIN.NS",
+    "ICICI BANK": "ICICIBANK.NS",
+    "ICICIBANK": "ICICIBANK.NS",
+    "BAJAJ FINANCE": "BAJFINANCE.NS",
+    "BAJFINANCE": "BAJFINANCE.NS",
+    "MARUTI": "MARUTI.NS",
+    "MARUTI SUZUKI": "MARUTI.NS",
+    "NTPC": "NTPC.NS",
+    "SUN PHARMA": "SUNPHARMA.NS",
+    "SUNPHARMA": "SUNPHARMA.NS",
+    "TECH MAHINDRA": "TECHM.NS",
+    "TECHM": "TECHM.NS",
+    "ADANI ENTERPRISES": "ADANIENT.NS",
+    "ADANIENT": "ADANIENT.NS",
+    "WIPRO": "WIPRO.NS",
+    "POWER GRID": "POWERGRID.NS",
+    "POWERGRID": "POWERGRID.NS",
+    "ONGC": "ONGC.NS",
+    "TATA MOTORS": "TATAMOTORS.NS",
+    "TATAMOTORS": "TATAMOTORS.NS",
+    "HINDUSTAN UNILEVER": "HINDUNILVR.NS",
+    "HINDUNILVR": "HINDUNILVR.NS",
+    "TITAN": "TITAN.NS",
+    "ULTRATECH CEMENT": "ULTRACEMCO.NS",
+    "ULTRACEMCO": "ULTRACEMCO.NS",
+}
+
+
+def _clean_mapping_key(s: str) -> str:
+    s = (s or "").upper()
+    s = re.sub(r"[^A-Z0-9]+", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def _name_to_nse_ticker(raw: str) -> Optional[str]:
+    direct = _normalize_ticker(raw)
+    if direct:
+        return direct
+
+    cleaned = _clean_mapping_key(raw)
+    if not cleaned:
+        return None
+
+    for name, ticker in _NAME_TO_NSE_TICKER.items():
+        if _clean_mapping_key(name) == cleaned:
+            return ticker
+
+    for name, ticker in _NAME_TO_NSE_TICKER.items():
+        if _clean_mapping_key(name) in cleaned:
+            return ticker
+
+    return None
 @app.on_event("startup")
 def startup_event():
     load_stock_data("data/EQUITY_L.csv")
@@ -43,7 +124,7 @@ def resolve_stock_api(q: str = Query(...)):
 
 @app.get("/search-stock")
 def search_stock_api(q: str = Query(...)):
-    return {"results": search_stocks(q, limit=3)}
+    return {"results": search_stocks(q, limit=5)}
 @app.post("/analyze")
 def analyze_stock(data: dict):
     question_stock_input = data.get("question_stock")
@@ -90,6 +171,7 @@ class ChatRequest(BaseModel):
     portfolio: List[str] = Field(default_factory=list)
     investment_amount: float = Field(..., gt=0)
     timeframe: str = Field(..., min_length=1)
+    selected_stock: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -644,6 +726,12 @@ def extract_stock_from_question(question: str) -> Optional[str]:
     if not cleaned:
         return None
 
+    # First try alias / direct ticker mapping
+    alias_ticker = _name_to_nse_ticker(cleaned)
+    if alias_ticker:
+        return alias_ticker.replace(".NS", "")
+    if alias_ticker:
+        return alias_ticker.replace(".NS", "")
     matches = search_stocks(cleaned, limit=5)
 
     best_match = None
@@ -675,15 +763,19 @@ def chat(req: ChatRequest) -> ChatResponse:
     # -----------------------------------
     # Step 7: Resolve stock from question
     # -----------------------------------
-    clean_question = extract_stock_from_question(req.question)
-
-    print("Clean extracted stock text:", clean_question)
-
-    question_stock = resolve_stock(clean_question)
-
     question_ticker = None
-    if question_stock["status"] == "success":
-        question_ticker = question_stock["ticker"]
+
+    if req.selected_stock:
+       print("Using frontend selected stock:", req.selected_stock)
+       question_stock = resolve_stock(req.selected_stock)
+    else:
+       clean_question = extract_stock_from_question(req.question)
+       print("Clean extracted stock text:", clean_question)
+       question_stock = resolve_stock(clean_question)
+
+    if question_stock["status"] == "success": 
+       question_ticker = question_stock["ticker"]
+
 
     # -----------------------------------
     # Resolve portfolio stocks
@@ -861,26 +953,13 @@ def chat(req: ChatRequest) -> ChatResponse:
     if missing:
         raise HTTPException(status_code=500, detail=f"Model JSON missing fields: {missing}")
 
+
+    # Fix bad Groq response types for portfolio summary
+    if isinstance(obj.get("rsi_explanation"), dict):
+       obj["rsi_explanation"] = "Mixed RSI signals across your portfolio holdings."
+
+    if isinstance(obj.get("rsi_value"), dict):
+       obj["rsi_value"] = ", ".join(
+           [f"{k}: {v}" for k, v in obj["rsi_value"].items()]
+    )
     return ChatResponse(**obj)
-
-    # Ensure required fields exist; fill safe defaults
-    obj["timestamp"] = _ist_timestamp_str()
-    obj["sources_used"] = fetched_sources_used
-    obj["concentration_warning"] = concentration_warning
-    obj["bulk_deals"] = bulk_deals
-
-    # If model didn't include RSI fields, fill from the most relevant ticker we computed.
-    primary = tickers[0] if tickers else None
-    if "rsi_value" not in obj:
-        obj["rsi_value"] = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_value") if primary else None
-    if "rsi_explanation" not in obj or not obj.get("rsi_explanation"):
-        obj["rsi_explanation"] = (
-            (rsi_by_ticker.get(primary, {}) or {}).get("rsi_explanation") if primary else "RSI unavailable."
-        )
-
-    missing = [k for k in ChatResponse.model_fields.keys() if k not in obj]
-    if missing:
-        raise HTTPException(status_code=500, detail=f"Model JSON missing fields: {missing}")
-
-    return ChatResponse(**obj)
-
