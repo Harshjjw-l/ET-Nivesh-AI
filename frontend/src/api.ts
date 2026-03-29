@@ -16,7 +16,6 @@ export type ChatResponse = {
   concentration_warning?: string | null
   bulk_deals?: unknown
   budget_note?: string | null
-
   status?: 'ok' | 'need_selection'
   options?: {
     symbol: string
@@ -38,8 +37,7 @@ export async function postChat(payload: ChatRequest, signal?: AbortSignal) {
     throw new Error(`Chat request failed (${res.status}): ${text || res.statusText}`)
   }
 
-  const data = (await res.json()) as ChatResponse
-  return data
+  return (await res.json()) as ChatResponse
 }
 
 type TodaySignalsResponse = {
@@ -59,11 +57,13 @@ export async function getTodaySignals(signal?: AbortSignal) {
   }
 
   const data = (await res.json()) as TodaySignalsResponse
+
   return {
     timestamp: data.timestamp,
     deals: Array.isArray(data.deals) ? data.deals : [],
   }
 }
+
 export async function searchStock(query: string, signal?: AbortSignal) {
   const res = await fetch(`${API_BASE}/search-stock?q=${encodeURIComponent(query)}`, {
     method: 'GET',
