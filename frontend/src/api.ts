@@ -1,7 +1,8 @@
 import type { ChatRequest } from './types'
 import type { BulkDeal } from './types'
 
-const API_BASE = 'https://et-nivesh-ai-backend1.onrender.com'
+const API_BASE =
+  import.meta.env.VITE_API_URL || 'https://et-nivesh-ai-backend1.onrender.com'
 
 export type ChatResponse = {
   answer?: string
