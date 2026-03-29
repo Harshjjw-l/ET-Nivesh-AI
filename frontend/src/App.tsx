@@ -6,10 +6,7 @@ function nowIso() {
   return new Date().toISOString()
 }
 
-function formatTime(iso: string) {
-  const d = new Date(iso)
-  return d.toLocaleString()
-}
+
 
 function normalizeTicker(s: string) {
   return s.trim().toUpperCase().replace(/\s+/g, '')
@@ -28,7 +25,19 @@ function indicatorToneClasses(macdSignal?: string | null) {
   if (tone === 'bearish') return 'border-red-400/50 bg-red-500/10'
   return 'border-white/15 bg-white/5'
 }
-
+function formatTime(iso?: string) {
+  if (!iso) return 'No timestamp'
+  const d = new Date(iso)
+  if (isNaN(d.getTime())) return iso
+  return d.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+}
 function uniqueNonEmptyTickers(values: string[]) {
   const out: string[] = []
   const seen = new Set<string>()
@@ -199,12 +208,12 @@ export default function App() {
                 macdSignal: undefined,
               }
             : undefined,
-        sources:
-          result.sources_used && result.sources_used.length
-            ? result.sources_used.map((s: string) => ({
-                timestamp: result.timestamp || nowIso(),
-                dataUsed: s,
-              }))
+            sources:
+            result.sources_used && result.sources_used.length
+              ? result.sources_used.map((s: string) => ({
+                  timestamp: nowIso(),
+                  dataUsed: s,
+                }))
             : [
                 {
                   timestamp: nowIso(),
@@ -608,4 +617,3 @@ export default function App() {
     </div>
   )
 }
-
