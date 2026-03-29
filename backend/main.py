@@ -26,7 +26,7 @@ try:
 except Exception:  # pragma: no cover
     Groq = None  # type: ignore
 
-
+app = FastAPI(title="ET Nivesh AI")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
