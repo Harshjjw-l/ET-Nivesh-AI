@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
-import pandas_ta as ta
+
 import requests
 import yfinance as yf
 from fastapi import FastAPI, Query
@@ -438,30 +438,22 @@ def _compute_support_resistance(df: pd.DataFrame, current_price: float, timefram
     }
 
 def _compute_rsi(close_series: pd.Series, length: int = 14) -> Tuple[Optional[float], str]:
-    rsi_series = ta.rsi(close_series.astype(float), length=length)
-    if rsi_series is None or len(rsi_series) == 0:
-        return None, "RSI could not be computed from the available data."
-    last = rsi_series.dropna()
-    if last.empty:
-        return None, "RSI needs more data points; not enough clean closing prices were available."
-    val = float(last.iloc[-1])
-    if val >= 70:
-        expl = (
-            f"RSI is {val:.2f}, which is often seen as 'overbought' — "
-            "meaning the price has risen quickly and may cool off."
-        )
-    elif val <= 30:
-        expl = (
-            f"RSI is {val:.2f}, which is often seen as 'oversold' — "
-            "meaning the price has fallen quickly and may bounce."
-        )
-    else:
-        expl = (
-            f"RSI is {val:.2f}, which is in a neutral zone — "
-            "neither strongly overheated nor deeply beaten down."
-        )
-    return val, expl
-
+    try:
+        delta = close_series.diff()
+        gain = delta.where(delta > 0, 0.0).rolling(window=length).mean()
+        loss = -delta.where(delta < 0, 0.0).rolling(window=length).mean()
+        rs = gain / loss
+        rsi = 100 - (100 / (1 + rs))
+        val = float(rsi.dropna().iloc[-1])
+        if val >= 70:
+            expl = f"RSI is {val:.2f} — overbought (price rose too fast, may pull back)."
+        elif val <= 30:
+            expl = f"RSI is {val:.2f} — oversold (price fell too fast, may bounce)."
+        else:
+            expl = f"RSI is {val:.2f} — neutral zone."
+        return val, expl
+    except Exception:
+        return None, "RSI could not be computed."
 
 def _portfolio_concentration_flags(portfolio: List[str]) -> List[str]:
     # We don't have holdings/weights, so we assume equal allocation of the given portfolio list.
