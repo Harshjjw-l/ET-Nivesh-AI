@@ -4,18 +4,6 @@
 > Built for **ET GenAI Hackathon 2026** — Problem Statement 6: AI for the Indian Investor
 > Team: 2 BTech 2nd Year students | 48-hour build
 
----
-
-## 🔗 Live Demo
-
-| Resource | Link |
-|----------|------|
-| **Live Application** | `[DEPLOYMENT LINK — ADD AFTER DEPLOY]` |
-| **Backend API** | `[RENDER BACKEND URL — ADD AFTER DEPLOY]` |
-| **Demo Video** | `[YOUTUBE/DRIVE LINK — ADD AFTER RECORDING]` |
-| **GitHub Repository** | `[YOUR GITHUB REPO LINK]` |
-
----
 
 ## 🎯 The Problem We Solved
 
@@ -491,8 +479,8 @@ Built by two BTech 2nd Year students for the ET GenAI Hackathon 2026 in 48 hours
 
 | Member | Role |
 |--------|------|
-| [YOUR NAME] | Backend — FastAPI, yfinance, technical indicators, Groq integration |
-| [TEAMMATE NAME] | Frontend — React, TypeScript, UI/UX design |
+| [Harsh jhunjhunwala] | Backend — FastAPI, yfinance, technical indicators, Groq integration |
+| [Ishita Bhatt] | Frontend — React, TypeScript, UI/UX design |
 
 ---
 
@@ -518,7 +506,22 @@ et-nivesh-ai/
 │   └── .env                    # VITE_API_URL (not committed)
 └── README.md
 ```
+---
 
+## 🔗 Live Demo
+
+| Resource | Link |
+|----------|------|
+| **Live Application** | `[https://et-nivesh-ai-frontend.vercel.app/]` | 
+**Note:** Backend deployed on Render free tier. 
+> Yahoo Finance data may be limited on cloud deployment 
+> due to IP restrictions. For full functionality with 
+> live NSE data, run the backend locally using the 
+> instructions below. All features work completely on local setup.
+| **Backend API** | `[https://et-nivesh-ai-backend1.onrender.com]` |
+| **GitHub Repository** | `[(https://github.com/Harshjjw-l/ET-Nivesh-AI)]` |
+
+---
 ---
 
 *ET Nivesh AI — Built with purpose, for India's retail investor.*
