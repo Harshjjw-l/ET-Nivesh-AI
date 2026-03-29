@@ -57,6 +57,7 @@ function dealSummaryFromDeal(deal: BulkDeal) {
 export default function App() {
   const [tickerInputs, setTickerInputs] = useState<string[]>(['', '', '', '', ''])
   const [amountInr, setAmountInr] = useState<string>('')
+  const [totalInvested, setTotalInvested] = useState<string>('')
   const [timeframe, setTimeframe] = useState<Timeframe>('short_term')
 
   const portfolio: Portfolio = useMemo(() => {
@@ -139,6 +140,7 @@ export default function App() {
         question: q,
         portfolio: portfolio.tickers,
         investment_amount: portfolio.amountInr ?? 0,
+        total_invested: Number(totalInvested) || 0,
         timeframe:
           portfolio.timeframe === 'intraday'
             ? 'intraday'
@@ -147,7 +149,45 @@ export default function App() {
             : '12 month',
       }
       const result : any = await postChat(payload, controller.signal)
+      if (result.status === 'need_selection' && result.options?.length) {
+        const assistantMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: 'I found multiple matching stocks. Please choose one:',
+          options: result.options,
+          sources: [
+            {
+              timestamp: nowIso(),
+              dataUsed: 'Ambiguous stock detected — user selection required',
+            },
+          ],
+        }
+      
+        setMessages((m) => [...m, assistantMsg])
+        return
+      }
 
+
+
+      if (result.status === 'need_selection'  && result.options?.length) {
+        const assistantMsg: ChatMessage = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: 'Multiple stocks found. Please select one:',
+          options: result.options,
+          sources: [
+            {
+              timestamp: result.timestamp || nowIso(),
+              dataUsed: 'Multiple matching stock symbols found',
+            },
+          ],
+        } // NEW FIELD
+        
+      
+        setMessages((m) => [...m, assistantMsg])
+        setIsSending(false)
+        return
+      }
       const assistantMsg: ChatMessage = {
         id: crypto.randomUUID(),
         role: 'assistant',
@@ -270,10 +310,22 @@ export default function App() {
                 </span>
               </div>
             </div>
-
+            <div className="mb-4">
+  <label className="mb-2 block text-xs text-white/70" htmlFor="totalInvested">
+    Total already invested (₹)
+  </label>
+  <input
+    id="totalInvested"
+    className="w-full rounded-xl border border-white/15 bg-black/20 px-3 py-2.5 text-sm text-white outline-none transition focus:border-orange-400/70 focus:ring-2 focus:ring-orange-400/30"
+    inputMode="numeric"
+    placeholder="e.g. 500000"
+    value={totalInvested}
+    onChange={(e) => setTotalInvested(e.target.value.replace(/[^\d.]/g, ''))}
+  />
+</div>
             <div className="mb-4">
               <label className="mb-2 block text-xs text-white/70" htmlFor="amount">
-                Investment amount (₹)
+                Available amount to invest now (₹)
               </label>
               <input
                 id="amount"
@@ -307,9 +359,14 @@ export default function App() {
                 <span className="text-white/90">{portfolio.tickers.length ? portfolio.tickers.length : '—'}</span>
               </div>
               <div className="flex items-center justify-between py-1">
-                <span className="text-white/65">Amount</span>
-                <span className="text-white/90">{portfolio.amountInr == null ? '—' : `₹${portfolio.amountInr}`}</span>
-              </div>
+  <span className="text-white/65">Already Invested</span>
+  <span className="text-white/90">{totalInvested ? `₹${totalInvested}` : '—'}</span>
+</div>
+
+<div className="flex items-center justify-between py-1">
+  <span className="text-white/65">Available Cash</span>
+  <span className="text-white/90">{portfolio.amountInr == null ? '—' : `₹${portfolio.amountInr}`}</span>
+</div>
               <div className="flex items-center justify-between py-1">
                 <span className="text-white/65">Horizon</span>
                 <span className="text-white/90">
@@ -326,6 +383,7 @@ export default function App() {
   onClick={() => {
     setTickerInputs(['', '', '', '', ''])
     setAmountInr('')
+    setTotalInvested('')
     setTimeframe('short_term')
   }}
 >
@@ -396,22 +454,30 @@ export default function App() {
                           : 'border-white/15 bg-white/10'
                       }`}
                     >
-                      {m.role === 'assistant' && (m.budget_note || m.concentration_warning) ? (
-  <div className="mt-4 text-xs font-semibold uppercase tracking-wide text-white/60">
-    Portfolio & Capital Check
-  </div>
-) : null}
-{m.role === 'assistant' && m.concentration_warning ? (
-  <div className="mt-3 rounded-xl border border-orange-400/30 bg-orange-500/10 p-3 text-xs text-white/85">
-    <div className="mb-1 font-semibold text-white/90">Risk Warning</div>
-    <div>{m.concentration_warning}</div>
-  </div>
-) : null}
+                      
 
+
+                    
                     <div className="whitespace-pre-wrap break-words text-sm leading-7 text-white/95">
-                      {m.content}
+                    {m.content}
                     </div>
-                     
+
+{m.role === 'assistant' && m.options && m.options.length > 0 && (
+  <div className="mt-3 flex flex-wrap gap-2">
+    {m.options.map((opt, idx) => (
+      <button
+        key={`${opt.symbol}-${idx}`}
+        type="button"
+        className="rounded-full border border-orange-400/30 bg-orange-500/10 px-3 py-1 text-xs text-orange-100 hover:bg-orange-500/20"
+        onClick={() => {
+          setQuestion(`Analyze ${opt.symbol}`)
+        }}
+      >
+        {opt.symbol} - {opt.company_name}
+      </button>
+    ))}
+  </div>
+)}
                       {m.role === 'assistant' && (
   <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
     {m.entry_price && (
@@ -525,7 +591,7 @@ export default function App() {
                 />
                 <button
                   className="h-11 rounded-xl border border-orange-400/50 bg-gradient-to-br from-orange-500 to-orange-400 px-4 font-semibold text-black disabled:cursor-not-allowed disabled:opacity-60"
-                  onClick={onclick}
+                  onClick={onSend}
 
                   disabled={isSending || !question.trim()}
                 >

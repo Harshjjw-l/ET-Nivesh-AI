@@ -178,23 +178,33 @@ SYSTEM_PROMPT = (
 class ChatRequest(BaseModel):
     question: str = Field(..., min_length=1)
     portfolio: List[str] = Field(default_factory=list)
-    investment_amount: float = Field(..., gt=0)
+    investment_amount: float = Field(default=0)
+    total_invested: float = Field(default=0, ge=0)
     timeframe: str = Field(..., min_length=1)
     selected_stock: Optional[str] = None
 
 
+from typing import Optional, List, Any
+
 class ChatResponse(BaseModel):
-    answer: str
-    entry_price: Any
-    target_price: Any
-    stop_loss: Any
-    rsi_value: Any
-    rsi_explanation: str
-    sources_used: List[str]
-    timestamp: str
+    status: Optional[str] = None
+    answer: Optional[str] = None
+
+    entry_price: Optional[Any] = None
+    target_price: Optional[Any] = None
+    stop_loss: Optional[Any] = None
+
+    rsi_value: Optional[Any] = None
+    rsi_explanation: Optional[str] = None
+
+    sources_used: Optional[List[str]] = None
+    timestamp: Optional[str] = None
+
     concentration_warning: Optional[str] = None
-    bulk_deals: Any = None
+    bulk_deals: Optional[Any] = None
     budget_note: Optional[str] = None
+
+    options: Optional[List[dict]] = None
 
 _IST_TZ = timezone(timedelta(hours=5, minutes=30))
 
@@ -373,20 +383,13 @@ def _unique_nse_tickers(question: str, portfolio: List[str]) -> List[str]:
 
 
 def _fetch_last_20_days(ticker: str) -> pd.DataFrame:
-    # yfinance returns market days; we fetch ~1 month and then take last 20 rows
-    df = yf.download(
-        tickers=ticker,
-        period="2mo",
-        interval="1d",
-        auto_adjust=False,
-        progress=False,
-        group_by="column",
-        threads=False,
-    )
+    print("Fetching data for:", ticker)
+
+    df = yf.Ticker(ticker).history(period="2mo", interval="1d")
+
     if df is None or df.empty:
         raise ValueError(f"No price data returned for {ticker}")
 
-    # Ensure single-index columns (yfinance sometimes returns multi-index)
     if isinstance(df.columns, pd.MultiIndex):
         df.columns = [c[0] for c in df.columns]
 
@@ -396,8 +399,11 @@ def _fetch_last_20_days(ticker: str) -> pd.DataFrame:
 
     df = df.dropna(subset=[cols["close"]]).copy()
     df = df.tail(20)
+
     if df.empty:
         raise ValueError(f"Not enough price data for {ticker}")
+
+    print("SUCCESS:", ticker, "rows:", len(df))
     return df
 
 def _compute_support_resistance(df: pd.DataFrame, current_price: float, timeframe: str = "long term") -> Dict[str, Any]:
@@ -732,36 +738,44 @@ def extract_stock_from_question(question: str) -> Optional[str]:
     cleaned = question.lower()
 
     filler_phrases = [
-        "should i buy",
-        "can i buy",
-        "is it good to buy",
-        "for 1 year",
-        "for one year",
-        "for 6 months",
-        "for six months",
-        "for long term",
-        "for short term",
-        "if market crashes",
-        "if the market crashes",
-        "now",
-        "today",
-        "right now",
-        "stock",
-        "share",
-        "what about",
-        "bro",
-        "what do you think about",
-        "at current level",
-        "consider buying",
-        "wealth creation"
-    ]
+     "should i buy",
+     "should i invest in",
+     "can i buy",
+     "is it good to buy",
+     "for 1 year",
+     "for one year",
+     "for 6 months",
+     "for six months",
+     "for long term",
+     "for short term",
+     "if market crashes",
+     "if the market crashes",
+     "now",
+     "today",
+     "right now",
+     "stock",
+     "share",
+     "what about",
+     "bro",
+     "what do you think about",
+     "at current level",
+     "consider buying",
+     "wealth creation",
+     "analyze",
+     "analyse",
+     "should i buy?",
+     "what with",
+     "what's with",
+]
 
     for phrase in filler_phrases:
         cleaned = cleaned.replace(phrase, " ")
 
     cleaned = re.sub(r"[^a-zA-Z0-9\s]", " ", cleaned)
     cleaned = re.sub(r"\s+", " ", cleaned).strip()
-
+    words = cleaned.split()
+    if words:
+      cleaned = words[-1]
     if not cleaned:
         return None
 
@@ -810,6 +824,13 @@ def chat(req: ChatRequest) -> ChatResponse:
     else:
        clean_question = extract_stock_from_question(req.question)
        print("Clean extracted stock text:", clean_question)
+       matches = search_stocks(clean_question, limit=5)
+
+       if len(matches) > 1:
+         return {
+           "status": "need_selection",
+           "options": matches
+        }
        question_stock = resolve_stock(clean_question)
 
     if question_stock["status"] == "success": 
@@ -827,9 +848,17 @@ def chat(req: ChatRequest) -> ChatResponse:
     tickers = portfolio_result["resolved_tickers"]
 
     if question_ticker:
-        tickers = [question_ticker] + tickers
+      tickers = [question_ticker] + tickers
 
-    tickers = list(set(tickers))
+# remove duplicates while preserving order
+    seen = set()
+    ordered_tickers = []
+    for t in tickers:
+      if t not in seen:
+        seen.add(t)
+        ordered_tickers.append(t)
+
+    tickers = ordered_tickers
 
     print("Final tickers for analysis:", tickers)
 
@@ -839,50 +868,62 @@ def chat(req: ChatRequest) -> ChatResponse:
     fetched_sources_used: List[str] = []
 
     for t in tickers:
-        fetch_time_ist = _ist_time_str()
-        try:
-            df = _fetch_last_20_days(t)
-            close_col = "Close" if "Close" in df.columns else [c for c in df.columns if c.lower() == "close"][0]
-            rsi_val, rsi_expl = _compute_rsi(df[close_col])
-            current_price = float(df[close_col].iloc[-1])
-            
-            sr = _compute_support_resistance(df, current_price, req.timeframe)
-            technical_levels[t] = sr
-            
-            if rsi_val is None:
-                fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
-            else:
-                fetched_sources_used.append(
-                    f"{t}: current price={current_price:.2f}, RSI={rsi_val:.2f}, fetched_at={fetch_time_ist}"
-                )
+     fetch_time_ist = _ist_time_str()
+     try:
+        print("Trying ticker:", t)
 
-            prices[t] = {
-                "last_20_days": [
-                    {
-                        "date": idx.date().isoformat() if hasattr(idx, "date") else str(idx),
-                        "close": float(row[close_col])
-                    }
-                    for idx, row in df.iterrows()
-                ]
-            }
+        df = _fetch_last_20_days(t)
+        close_col = "Close" if "Close" in df.columns else [c for c in df.columns if c.lower() == "close"][0]
+        rsi_val, rsi_expl = _compute_rsi(df[close_col])
+        current_price = float(df[close_col].iloc[-1])
 
-            rsi_by_ticker[t] = {
-                "rsi_value": rsi_val,
-                "rsi_explanation": rsi_expl
-            }
+        sr = _compute_support_resistance(df, current_price, req.timeframe)
+        technical_levels[t] = sr
 
-        except Exception as e:
+        if rsi_val is None:
             fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
-            prices[t] = {"error": str(e)}
-            rsi_by_ticker[t] = {
-                "rsi_value": None,
-                "rsi_explanation": "RSI unavailable due to missing price data."
-            }
+        else:
+            fetched_sources_used.append(
+                f"{t}: current price={current_price:.2f}, RSI={rsi_val:.2f}, fetched_at={fetch_time_ist}"
+            )
+
+        prices[t] = {
+            "last_20_days": [
+                {
+                    "date": idx.date().isoformat() if hasattr(idx, "date") else str(idx),
+                    "close": float(row[close_col])
+                }
+                for idx, row in df.iterrows()
+            ]
+        }
+
+        rsi_by_ticker[t] = {
+            "rsi_value": rsi_val,
+            "rsi_explanation": rsi_expl
+        }
+
+     except Exception as e:
+        print("FAILED:", t, str(e))
+
+        fetched_sources_used.append(f"{t}: data unavailable — please verify NSE symbol")
+        prices[t] = {"error": str(e)}
+        rsi_by_ticker[t] = {
+            "rsi_value": None,
+            "rsi_explanation": "RSI unavailable due to missing price data."
+        }
 
     concentration_notes = _portfolio_concentration_flags(req.portfolio)
     concentration_warning = _concentration_warning(tickers, req.investment_amount)
     bulk_deals = _fetch_nse_bulk_deals_for_portfolio(tickers)
     budget_note = None
+    portfolio_context_note = None
+
+    if req.total_invested > 0 and tickers:
+      avg_per_stock = req.total_invested / len(tickers)
+      portfolio_context_note = (
+        f"User has already invested approximately ₹{int(req.total_invested):,} "
+        f"across {len(tickers)} stock(s), averaging about ₹{avg_per_stock:,.0f} per stock."
+     )
 
     primary = question_ticker if question_ticker else (tickers[0] if tickers else None)
 
@@ -912,6 +953,8 @@ def chat(req: ChatRequest) -> ChatResponse:
         "question": req.question,
         "portfolio": req.portfolio,
         "investment_amount": req.investment_amount,
+        "total_invested": req.total_invested,
+        "portfolio_context_note": portfolio_context_note,
         "timeframe": req.timeframe,
         "nse_tickers_found": tickers,
         "prices": prices,
@@ -965,15 +1008,16 @@ def chat(req: ChatRequest) -> ChatResponse:
                     "role": "user",
                     "content": (
                         "Use the provided NSE price data (last 20 trading days), RSI info, technical levels, and budget note to answer. "
-                        "Use the provided NSE price data (last 20 trading days), RSI info, technical levels, and budget note to answer. "
                         "Write the answer in a natural, beginner-friendly, slightly conversational tone. "
                         "Explain WHY the stock looks attractive or risky in 2–3 lines, not just raw numbers. "
                         "Always mention RSI meaning in simple words. "
                         "Always mention entry, target, stop loss, and budget note if available. "
+                        "If total invested amount is available, mention whether this looks like a fresh buy, a small add-on, or a major portfolio exposure increase. "
+                        "If concentration risk exists, explain it clearly in simple words. "
                         "Return ONLY a single valid JSON object with the required fields. "
                         "If multiple tickers exist, focus on the most relevant one to the user's question, "
                         "but still mention the others briefly in the answer.\n\n"
-                        "but still mention the others briefly in the answer.\n\n"
+                        
                         f"{json.dumps(user_payload, ensure_ascii=False)}"
                     ),
                 },
@@ -1010,6 +1054,9 @@ def chat(req: ChatRequest) -> ChatResponse:
             bulk_deals=bulk_deals,
         )
 
+    obj.setdefault("status", "success")
+    obj.setdefault("options", None)
+
     obj["timestamp"] = _ist_timestamp_str()
     obj["sources_used"] = fetched_sources_used
     obj["concentration_warning"] = concentration_warning
@@ -1019,17 +1066,18 @@ def chat(req: ChatRequest) -> ChatResponse:
     primary = tickers[0] if tickers else None
 
     if "rsi_value" not in obj:
-        obj["rsi_value"] = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_value") if primary else None
+      obj["rsi_value"] = (rsi_by_ticker.get(primary, {}) or {}).get("rsi_value") if primary else None
 
     if "rsi_explanation" not in obj or not obj.get("rsi_explanation"):
-        obj["rsi_explanation"] = (
-            (rsi_by_ticker.get(primary, {}) or {}).get("rsi_explanation")
-            if primary else "RSI unavailable."
-        )
+      obj["rsi_explanation"] = (
+         (rsi_by_ticker.get(primary, {}) or {}).get("rsi_explanation")
+         if primary else "RSI unavailable."
+    )
 
-    missing = [k for k in ChatResponse.model_fields.keys() if k not in obj]
+    required_fields = ["answer"]
+    missing = [k for k in required_fields if k not in obj]
     if missing:
-        raise HTTPException(status_code=500, detail=f"Model JSON missing fields: {missing}")
+        raise HTTPException(status_code=500, detail=f"Model JSON missing required fields: {missing}")
 
 
     # Fix bad Groq response types for portfolio summary
@@ -1040,4 +1088,6 @@ def chat(req: ChatRequest) -> ChatResponse:
        obj["rsi_value"] = ", ".join(
            [f"{k}: {v}" for k, v in obj["rsi_value"].items()]
     )
+    if isinstance(obj.get("rsi_value"), (int, float)):
+     obj["rsi_value"] = round(float(obj["rsi_value"]), 2)
     return ChatResponse(**obj)

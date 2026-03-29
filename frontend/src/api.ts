@@ -3,8 +3,8 @@ import type { BulkDeal } from './types'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
-type ChatResponse = {
-  answer: string
+export type ChatResponse = {
+  answer?: string
   entry_price?: string | number | null
   target_price?: string | number | null
   stop_loss?: string | number | null
@@ -15,6 +15,13 @@ type ChatResponse = {
   concentration_warning?: string | null
   bulk_deals?: unknown
   budget_note?: string | null
+
+  status?: 'ok' | 'need_selection'
+  options?: {
+    symbol: string
+    company_name: string
+    ticker: string
+  }[]
 }
 
 export async function postChat(payload: ChatRequest, signal?: AbortSignal) {
