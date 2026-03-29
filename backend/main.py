@@ -27,10 +27,13 @@ except Exception:  # pragma: no cover
     Groq = None  # type: ignore
 
 
-app = FastAPI(title="ET Nivesh AI")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://et-nivesh-ai-frontend.vercel.app",
+        "https://*.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
